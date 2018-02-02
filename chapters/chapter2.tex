@@ -1,0 +1,203 @@
+% chapter2.tex
+
+%The finite element immersed boundary method, Heltai, Chapter 3 87-110
+\chapter{Approssimazione Numerica}
+
+La principale caratteristica del metodo \IB è l'utilizzo della funzione $\delta$ di Dirac non solo come una maniera formale per scrivere le equazioni dell'interazione tra fluido e struttura ma anche come un vero e proprio metodo numerico per collegare gli aspetti descritti con un formalismo euleriano a quelli descritti con un formalismo lagrangiano e viceversa. Nel metodo originale questo viene fatto mediante opportune approssimazioni della funzione $\delta$, che deve avere determinate caratteristiche per garantire la convergenza e la miglior velocità di convergenza allo schema numerico.
+
+Sfruttando la formulazione debole del problema è possibile evitare di approssimare la funzione $\delta$ mantenendo i vantaggi del metodo \IB, potendo sfruttare il metodo degli elementi finiti e migliorando così l'accuratezza della soluzione numerica.
+
+[problema non interamente variazionale: l'evoluzione della mesh lagrangiana è calcolata punto per punto usando la velocità del fluido
+problema interamente variazionale: posso sfruttare elemfiniti anche per l'evoluzione della mesh]
+
+\section{Metodo FE-IB}
+Sia $\mathcal{T}_h$ una mesh costruita su $\Omega$ formata da triangoli o quadrilateri nel caso $d=2$, o da tetraedri o esaedri nel caso $d=3$. Siano $V_h \subseteq H^1_0(\Omega)^d$ e $Q_h \subseteq L^2_0(\Omega)$ due sottospazi a dimensione finita degli spazi delle funzioni test $V$ e $Q$ che soddisfano la condizione inf-sup per garantire l'esistenza, unicità e la stabilità del problema di Navier-Stokes discreto. [Si può scegliere ad esempio la coppia Q2-P1.]
+
+Sia $\mathcal{U}_h$ una mesh di $\mathcal{B}$ formata da segmenti, triangoli o tetraedri. Sia $S_h$ un sottospazio a dimensione finita dello spazio $S$. [Ad esempio è possibile scegliere lo spazio delle funzioni lineari a tratti.]
+
+Scriviamo ora la versione spazialmente discreta del problema.
+
+Se $\mathbf{X}_h$ è lineare a tratti allora 
+$$\ps{\mathbf{f}_h(t)}{\mathbf{v}}=-\int_{\mathcal{B}}\mathbb{P}_{\alpha,\beta}(\mathbf{X}_h)\frac{\partial}{\partial s_\beta}(v_\alpha(\mathbf{X}_h))\, d\mathbf{s}$$
+Scriviamo l'integrale come somma sugli elementi della mesh, tenendo conto che $X_h$ è lineare a tratti e che la sua derivata e $\mathcal{P}$ sono costanti a tratti.
+$$\ps{\mathbf{f}_h(t)}{\mathbf{v}}=-\sum^M_{k=1}\int_{T_k}\mathbb{P}_{\alpha,\beta}(\mathbf{X}_h)\frac{\partial}{\partial s_\beta}(v_\alpha(\mathbf{X}_h))\, d\mathbf{s}
+    =-\sum^M_{k=1}\int_{\partial T_k}\mathbb{P}_{\alpha,\beta}(\mathbf{X}_h)N_i v_\alpha(\mathbf{X}_h)\, dA$$
+I vari contributi dovuti a lati comuni degli elementi si annullano e rimangono solo quelli riguardanti il bordo della struttura $\mathcal{B}$
+$$\ps{\mathbf{f}_h(t)}{\mathbf{v}}=-\sum_{e\in\mathcal{E}}\int_e\mathbb{P}_h\mathbf{N}\cdot\mathbf{v}(\mathbf{X}_h)\,dA$$
+Con questa espressione del termine sorgente il problema diventa
+\begin{problem}
+\end{problem}
+Per garantire una migliore stabilità al problema l'operatore $c(\mathbf{u},\mathbf{v},\mathbf{w})$ è sostituito da
+$$c_h(\mathbf{u},\mathbf{v},\mathbf{w})=\frac{\rho}{2}(\ps{\mathbf{u}\cdot\Nabla\mathbf{v}}{\mathbf{w}}-\ps{\mathbf{u}\cdot\Nabla\mathbf{w}}{\mathbf{v}})$$
+Si può osservare che se $\Nabla\cdot\mathbf{u}=0$ allora $c(\mathbf{u},\mathbf{v},\mathbf{w})=c_h(\mathbf{u},\mathbf{v},\mathbf{w})$ e inoltre $c_h(\mathbf{u},\mathbf{v},\mathbf{v})=0$.
+[caso $m=1$ e $d=2$]
+
+\section{Approssimazione temporale}
+
+Per quanto riguarda la discretizzazione temporale verrà usato il metodo delle differenze finite. Questi metodi si dividono in due categorie principali: i metodi espliciti, più convenienti in termini computazionali ma che soffrono di problemi di stabilità e i metodi impliciti, più dispendiosi in termini di tempo di calcolo, soprattutto se applicati a problemi non lineari, ma più stabili [].
+
+Il primo metodo presentato è uno schema totalmente implicito, implementato utilizzando il metodo di Eulero implicito sia per le equazioni del fluido che della struttura e in seguito chiamato BE/BE. Essendo le equazioni che governano il fluido e che regolano l'interazione tra questo e la struttura elastica non lineari questo metodo richiede ad ogni passo temporale di utilizzare un metodo numerico iterativo per risolvere l'equazione non lineare.
+
+Alternativamente è possibile usare una variante semi-implicita, in seguito FE/BE, in cui i termini non lineari vengono discretizzati usando il metodo di Eulero esplicito. Non essendo questa variante incondizionatamente stabile è necessario soddisfare una opportuna condizione CFL per garantirne la stabiltà.
+
+Sia $\Delta t$ il passo temporale usato, $T$ il tempo finale, $N=\frac{T}{\Delta t}$ il numero di passi necessari per raggiungere $T$ e indicato con $f^n = f(t_n) = f(n\Delta t)$ il valore della variabile $f$ al tempo $t_n=n\Delta t$. [56]
+
+\subsection{BE/BE}
+
+\begin{problem}
+Dati $\mathbf{u}_0\in\mathbf{V}_h$ e  $\mathbf{X}_0\in\mathcal{S}_h$ per ogni $n\in\{0,...,N-1\}$ trovare la soluzione di
+\begin{equation}
+\begin{aligned}
+&\rho(\frac{\mathbf{u}^{n+1}-\mathbf{u}^{n}}{\Delta t}, \mathbf{v}) + c_h(\mathbf{u}^{n+1},\mathbf{u}^{n+1},\mathbf{v}) + a(\mathbf{u}^{n+1},\mathbf{v}) + b(\mathbf{v},p^{n+1}) = \ps{\mathbf{f}^{n+1}}{\mathbf{v}} \quad \forall\mathbf{v}\in\mathbf{V}_h\\
+&b(\mathbf{u}^{n+1},q)=0 \quad \forall q\in Q_h\\
+&\frac{\mathbf{X}^{n+1}-\mathbf{X}^{n}}{\Delta t} = \mathbf{u}^{n+1}(\mathbf{X}^{n+1})\\
+&\ps{\mathbf{f}^{n+1}}{\mathbf{v}}=-\sum_{e\in\mathcal{E}}\int_e\mathbb{P}_h(\mathbf{X}_h^{n+1})\mathbf{N}\cdot\mathbf{v}(\mathbf{X}^{n+1}_h)\,dA\\
+\end{aligned}
+\end{equation}
+\end{problem}
+
+
+\subsection{FE/BE}
+\begin{problem}
+Dati $\mathbf{u}_0\in\mathbf{V}_h$ e  $\mathbf{X}_0\in\mathcal{S}_h$ per ogni $n\in\{0,...,N-1\}$ trovare la soluzione di
+\begin{equation}
+\begin{aligned}
+&\rho(\frac{\mathbf{u}^{n+1}-\mathbf{u}^{n}}{\Delta t}, \mathbf{v}) + c_h(\mathbf{u}^{1},\mathbf{u}^{n+1},\mathbf{v}) + a(\mathbf{u}^{n+1},\mathbf{v}) + b(\mathbf{v},p^{n+1}) = \ps{\mathbf{f}^{n}}{\mathbf{v}} \quad \forall\mathbf{v}\in\mathbf{V}_h\\
+&b(\mathbf{u}^{n+1},q)=0 \quad \forall q\in Q_h\\
+&\frac{\mathbf{X}^{n+1}-\mathbf{X}^{n}}{\Delta t} = \mathbf{u}^{n+1}(\mathbf{X}^{n})\\
+&\ps{\mathbf{f}^{n}}{\mathbf{v}}=-\sum_{e\in\mathcal{E}}\int_e\mathbb{P}_h(\mathbf{X}_h^{n})\mathbf{N}\cdot\mathbf{v}(\mathbf{X}^{n}_h)\,dA\\
+\end{aligned}
+\end{equation}
+\end{problem}
+
+\section{Analisi della stabilità}
+
+[instabilità dovuta al fluido, instabilità dovuta alla struttura]
+
+L'analisi della stabilità verrà fatta sfruttando la stima dell'energia []
+
+\subsection{Stabilità del problema spazialmente discreto}
+
+\begin{theorem}
+Per $t\in]0,T[$, siano $\mathbf{u}_h(t)\in\mathbf{V}_h$, $p_h(t)\in Q_h$ e $\mathbf{X}_h(t)\in\mathbf{S}_h$ le soluzioni del problema [] allora
+$$\frac{1}{2}\frac{d}{dt}\Vert\mathbf{u}_h(t)\Vert^2_{0,\Omega}+\eta\Vert\Nabla\mathbf{u}_h(t)\Vert^2_{0,\Omega}+\frac{d}{dt}E_p[\mathbf{X}_h(t)]=0$$
+\end{theorem}
+\begin{proof}
+Preso $\mathbf{v}=\mathbf{u}_h(t)$ e osservato che $c_h(\mathbf{u}_h(t),\mathbf{u}_h(t),\mathbf{u}_h(t))=0$ allora
+$$\frac{1}{2}\frac{d}{dt}\Vert\mathbf{u}_h(t)\Vert^2_{0,\Omega}+\eta\Vert\Nabla\mathbf{u}_h(t)\Vert^2_{0,\Omega} = -\int_{\mathcal{B}}\mathbb{P}(\mathbb{F}_h(t))\frac{\partial}{\partial t}(\mathbf{u}_h(\mathbf{X}_h(t)))\,d\mathbf{s}$$
+$$=-\int_{\mathcal{B}}\frac{\partial W(\mathbb{F}_h(t))}{\partial \mathbb{F}}\frac{\partial}{\partial \mathbf{s}}\frac{\partial\mathbf{X}_h(t)}{\partial t}\,d\mathbf{s}=-\frac{d}{dt}\int_{\mathcal{B}}W(\mathbb{F}_h(t))\,d\mathbf{s}$$
+usando [].
+\end{proof}
+
+\subsection{Stabilità del problema spazialmente e temporalmente discreto}
+
+Per poter fare previsioni sulla stabilità del problema è necessario richiedere che
+$${k}_\text{min}\mathbb{E}^2\leq\mathbb{E}\mathbf{:}\mathbb{H}\mathbf{:}\mathbb{E}\leq{k}_\text{max}\mathbb{E}^2$$
+con
+$$\mathbb{H}_{\alpha i\beta j}=\frac{\partial^2 W}{\partial\mathbb{F}_{\alpha i}\partial\mathbb{F}_{\beta j}}$$
+
+Questa condizione è soddisfatta dal metodo IB per materiali neo-Hookiani [${k}_\text{max}={k}_\text{min}>0$] o per piccole deformazioni[elasticità linearizzata?], mentre non lo è nel caso generale per grandi deformazioni.
+
+L'approssimazione temporale ha l'effetto di introdurre una viscosità artificiale $\eta_a$ nella stima dell'energia. Se $\eta_a$ è positiva allora il metodo è incondizionatamente stabile, nel caso in cui sia negativa e la somma $\eta+\eta_a$ sia anch'essa negativa ha l'effetto di creare energia ad ogni step temporale rendendo il metodo instabile. Sarà necessario richiedere quindi che $\eta+\eta_a>0$.
+
+\begin{theorem}
+Siano $\mathbf{u}_h$, $\mathbf{X}_h$ le soluzioni del problema. Se la densità di energia $W$ è una funzione $C^2$ dei suoi argomenti e la mesh Lagrangiana è quasi-uniforme allora
+$$\frac{1}{2\Delta t}(\Vert\mathbf{u}^{n+1}_h\Vert^2_{0,\Omega}-\Vert\mathbf{u}^{n}_h\Vert^2_{0,\Omega})+(\eta+\eta_a)\Vert\Nabla\mathbf{u}^{n+1}_h\Vert^2_{0,\Omega}+\frac{1}{\Delta t}(\int_{\mathcal{B}}W(\mathbb{F}^{n+1}_h(t))\,d\mathbf{s}-\mathcal{B}W(\mathbb{F}^{n}_h(t))\,d\mathbf{s})\leq 0$$
+Nel caso BE/BE
+$$\eta_a=k_\text{min}C\frac{h_s^{(m-2)}\Delta t}{h_x^{(d-1)}}L^{n+1}C_e^{n+1}$$
+Nel caso FE/BE
+$$\eta_a=-k_\text{max}C\frac{h_s^{(m-2)}\Delta t}{h_x^{(d-1)}}L^nC_e^n$$
+con $$L^n=\max_{T_k\in S_h} \{ \max_{\mathbf{s}_i,\mathbf{s}_j\in V(T_k)} \vert \mathbf{X}^n_h(\mathbf{s}_j) - \mathbf{X}^n_h(\mathbf{s}_i) \vert \}$$
+e $C_e^n$ il massimo numero di elementi lagrangiani che toccano lo stesso elemento euleriano.
+\end{theorem}
+\begin{proof}
+\end{proof}
+
+\section{Il metodo FE-IB con moltiplicatori di Lagrange distribuiti}
+[]
+Nel problema la relazione tra le velocità  del fluido e della struttura è data dall'equazione
+$$\mathbf{u}(\mathbf{X}(\mathbf{s},t),t)=\frac{\partial \mathbf{X}}{\partial t}(\mathbf{s},t)$$
+Questa può dare alcuni problemi [].
+
+L'equazione può essere scritta in forma variazionale [].
+
+Siano $\Lambda$, $H_1$ e $H_2$ tre spazi funzionali e $c_1:\Lambda\times H_1\mapsto\Re$, $c_2:\Lambda\times H_2\mapsto\Re$ tali che
+$$\forall\mathbf{v}\in H_1,\mathbf{Y}\in H_2\tc\exists\mathbf{X'} c_1(\lambda,\mathbf{v}(\mathbf{X'}))-c_2(\lambda,\mathbf{Y})=0 \quad\forall\lambda\in\Lambda$$
+allora $$\mathbf{v}(\mathbf{X'})=\mathbf{Y}$$.
+Sostituiamo all'equazione
+$$c_1(\lambda,\mathbf{u}(\mathbf{X}(\cdot,t),t))-c_2(\lambda,\frac{\partial\mathbf{X}}{\partial t}(t))=0$$
+Questa nuova equazione può essere intesa come una restrizione al nostro sistema e possiamo introdurre il moltiplicatore di Lagrange associato nella prima equazione e riscrivere il problema.
+
+[]
+
+Possiamo ora introdurre la versione discreta del problema [] usando gli elementi finiti
+
+e poi la discretizzazione temporale del problema.
+
+\subsection{Analisi della stabilità }
+
+
+\subsection{Conservazione della massa}
+
+\paragraph{Conservazione locale della massa per il problema di Stokes}
+%Local Mass Conservation of Stokes Finite Element
+Nella formulazione variazionale del problema il vincolo dell'incomprimibilità è imposto solo debolmente e quindi non sarà soddisfatto puntualmente a meno che [].
+
+Verranno presentate alcune modifiche agli elementi di Hood-Taylor e Bercovier-Pironneau in modo da ammettere pressioni discontinue cosicché il vincolo dell'incomprimilità possa essere soddisfato almeno in media elemento per elemento. Verrà quindi verificata la condizione inf-sup e la stabilità dello schema numerico.
+
+\subparagraph{Il problema di Stokes}
+Si consideri il problema di Stokes
+$$-\Delta\mathbf{u}-\nabla p=\mathbf{f}\quad\text{in}\Omega$$
+$$\Nabla\cdot\mathbf{u}=0\quad\text{in}\Omega$$
+$$\mathbf{u}=0\quad\text{su}\partial\Omega$$
+dove $\mathbf{u}$ è la velocità del fluido, $p$ è la pressione, $\mathbf{f}$ è la forza esterna e $\Omega\subset\Re^d$ ($d=2,3$) è un dominio poligonale o poliedrale.
+
+Siano $\mathbf{V}=H^1_0(\Omega)^d$ e $Q=L^2_0(\Omega)$ allora il problema in forma debole diventa
+$$a(\mathbf{u},\mathbf{v})+b(\mathbf{v},p)=(\mathbf{f},\mathbf{v})\quad\forall\mathbf{v}\in\mathbf{V}$$
+$$b(\mathbf{u},q)=0\quad\forall q\in Q$$
+dove $(\cdot,\cdot)$ è il prodotto scalare in $L^2$ e
+$$a(\mathbf{u},\mathbf{v})=\int_{\Omega}\Nabla\mathbf{u}\boldsymbol{:}\Nabla\mathbf{v}\,d\mathbf{x}$$
+$$b(\mathbf{u},p)=-\int_{\Omega}p\Nabla\cdot\mathbf{u}\,d\mathbf{x}$$
+
+Sia $\mathcal{T}_h$ una mesh costituita da simplessi costruita su $\Omega$ che soddisfa [shape-regular?], dove $h$ è il maggiore dei diametri degli elementi di $\mathcal{T}_h$.
+
+Siano $\mathbf{V}_h\subset\mathbf{V}$ e $Q_h\subset Q$ due sottospazi di dimensione finita. Il problema discreto diventa
+$$a(\mathbf{u}_h,\mathbf{v}_h)+b(\mathbf{v}_h,p_h)=(\mathbf{f},\mathbf{v}_h)\quad\forall\mathbf{v}_h\in\mathbf{V}_h$$
+$$b(\mathbf{u}_h,q_h)=0\quad\forall q_h\in Q_h$$
+Se $a(\cdot,\cdot)$ è coerciva su $\mathbf{V}$ allora per garantire l'esistenza, l'unicità e la stabilità della soluzione discreta del problema di Stokes è sufficiente che gli spazi $(\mathbf{V}_h,Q_h)$ soddisfino la condizione inf-sup
+$$\exists\beta>0\quad\text{indipendente da $h$ tale che}$$
+$$\inf_{q_h\in Q_h}\sup_{\mathbf{v}_h\in\mathbf{V}_h}\frac{b(\mathbf{v}_h,q_h)}{\Vert\mathbf{v}_h\Vert_{\mathbf{V}}\Vert q_h\Vert_{Q}}\geq\beta$$
+Infatti se la soddisfano allora vale
+$$\Vert\mathbf{u}-\mathbf{u}_h\Vert_{\mathbf{V}}+\Vert p - p_h \Vert_{Q}\leq C\inf_{\mathbf{v}_h\in\mathbf{V}_h,q_h\in Q_h}(\Vert\mathbf{u}-\mathbf{v}_h\Vert_{\mathbf{V}}+\Vert p - q_h \Vert_{Q})$$
+
+La condizione inf-sup può essere verificata con il metodo dei macroelementi. []
+
+Teorema dei macroelementi.
+
+\subparagraph{Analisi della stabilità}
+
+Elemento di Hood-Taylor modificato.
+
+$$\mathbf{V}_h=\{\mathbf{v}\in H^1_0(\Omega)^d\tc\mathbf{v}_{\vert K}\in P_{k+1}(K)^d\forall K\in\mathcal{T}_h \}$$
+$$Q_h=\{ q\in L^2_0(\Omega)^d\tc q=q_k+q_0. q_k\in C(\bar{\Omega}),{q_k}_{\vert K}\in P_k(K), {q_0}_{\vert K}\in P_0(K)\forall K\in\mathcal{T}_h \}$$
+Per soddisfare l'ipotesi H5 è necessario scegliere $k\geq d-1$.
+
+Dimostriamo ora l'ipotesi H1 sfuttando una generalizzazione dell'argomento usato per l'elemento di Hood-Taylor
+
+Proposizione. Si ipotizzi che ogni elemento $ K\in\mathcal{T}_h$ abbia almeno un vertice nell'interno di $\Omega$. Sia $\mathcal{M}_h$ l'insieme dei macroelementi ottenuti raggruppando quegli elementi che per ogni vertice interno $x_0$ toccano $x_0$. Allora per ogni $M\in\mathcal{M}_h$ lo [spazio nullo?nucleo?] $N_M$ è monodimensionale ed è formato da funzioni costanti su $M$.
+Dimostrazione. []
+
+Elemento di Bercovier-Pironneau modificato.
+
+$$\mathbf{V}_h=\{\mathbf{v}\in H^1_0(\Omega)^2\tc\mathbf{v}_{\vert K}\in P_{1}(K)^2\forall K\in\mathcal{T}_{h/2} \}$$
+$$Q_h=\{ q\in L^2_0(\Omega)^d\tc q=q_1+q_0. q_k\in C(\bar{\Omega}),{q_1}_{\vert K}\in P_1(K), {q_0}_{\vert K}\in P_0(K)\forall K\in\mathcal{T}_{h/2} \}$$
+con $\mathcal{T}_{h/2}$ ottenuto []. 
+
+Proposizione. Si ipotizzi che ogni elemento $ K\in\mathcal{T}_h$ abbia almeno un vertice nell'interno di $\Omega$. Sia $\mathcal{M}_h$ l'insieme dei macroelementi ottenuti raggruppando quegli elementi che per ogni vertice interno $x_0$ toccano $x_0$. Allora per ogni $M\in\mathcal{M}_h$ lo [spazio nullo?nucleo?] $N_M$ è monodimensionale ed è formato da funzioni costanti su $M$.
+Dimostrazione. []
+
+Teorema. Soddisfano inf-sup.
+
+\paragraph{Conservazione della massa per il metodo DLM-IB-FE}
+%Coupled 2013 pg 323 MASS PRESERVING DISTRIBUTED LANGRAGE MULTIPLIER APPROACH TO IMMERSED BOUNDARY METHOD
+

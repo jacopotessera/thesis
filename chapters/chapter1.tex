@@ -1,0 +1,276 @@
+% chapter1.tex
+
+\chapter{Le interazioni fluido struttura}
+
+Nello studio delle interazione tra un fluido e una struttura ci si trova ad affrontare il problema di avere da una parte un fluido, il cui comportamento è descritto dalle equazioni di Navier-Stokes, e quindi totalmente caratterizzato dal valore della velocità e della pressione espresse in coordinate euleriane, e dall'altra un corpo elastico, il cui comportamento dipende nella maggioranza dei casi dalla sua deformazione rispetto alla posizione di equilibrio espressa in coordinate lagrangiane.
+
+\section{Il Metodo \IB di Peskin}
+
+%The immersed boundary method, C.S. Peskin, Acta Numerica, 2002
+Il metodo \textit{Immersed Boundary} ha lo scopo di studiare e simulare numericamente le interazioni tra un fluido e una struttura elastica immersa nel fluido. Il metodo è stato ideato da Charles Peskin negli anni settanta per lo studio del flusso sanguigno nel cuore attorno alle valvole cardiache ed è stato poi adattato per risolvere un vasto numero di problemi sia biologici che fisici[citation needed]. [Numerical Analysis of Blood Flow in Heart, 1977, Journal of Computational Physics]
+
+Uno dei principali problemi nelle interazioni fluido-struttura è che mentre il fluido è descritto in coordinate euleriane il materiale elastico è descritto in coordinate lagrangiane, e solo con molta difficoltà è possibile scrivere espicitamente entrambi i sistemi di equazioni che governano il fluido e la struttura rispettivamente sfruttando lo stesso insieme di variabili. Il metodo \IB inoltre permette di affrontare questo problema senza dover ricalcolare per ogni step temporale la mesh, al contrario dei metodi \textit{ALE}, sfruttando la funzione $\delta$ di Dirac per legare i due ambienti, quello euleriano e quello lagrangiano.
+
+Nella sua versione continua il metodo consiste nel considerare contemporaneamente le equazioni del fluido e della struttura. A queste, per evitare di dover riscrivere esplicitamente un insieme di equazioni nelle  coordinate e nelle variabili dell'altro, vanno aggiunte le equazioni che mettono in contatto i due differenti ambienti accoppiando le grandezze coinvolte mediante la funzione delta di Dirac. Viene calcolata la forza che la struttura elasitica esercita sul fluido e lo spostamento che il fluido induce nella struttura.
+
+Dal punto di vista dell'approssimazione numerica il metodo \IB permette di usare una mesh fissa per le variabili euleriane e una mesh curvilinea in movimento per le variabili lagrangiane che non deve adattarsi alla prima mesh. Le variabili euleriane e lagrangiane sono collegate da equazioni di interazione che nella versione originale del metodo, basato sulle differenze finite, sfruttava una opportuna approssimazione della funzione delta di Dirac che per garantire buone proprietà allo schema numerico era necessario che soddisfasse alcune condizioni e che avesse alcune proprietà. La formulazione variazionale del metodo \IB, riuscendo a descrivere in modo naturale l'effetto della funzione $\delta$ di Dirac, non necessità di nessuna approssimazione della funzione delta.
+
+\subsection{Le equazioni del problema}
+
+Il punto centrale del metodo è lo sfruttamento della funzione $\delta$ di Dirac per collegare le grandezze definite in variabili euleriane delle equazioni di Navier-Stokes alle corrispettive grandezze definite in variabili lagrangiane delle equazioni del materiale elastico, in particolare la velocità del fluido e della struttura e la forza che il fluido e la struttura applicano l'uno sull'altra.
+
+Usando la stessa notazione usata nell'introduzione introduciamo il problema continuo dei problemi di interazione fluido-struttura.
+
+\begin{problem}
+Date $\mathbf{u}_0$, $\mathbf{X}_0$ e $\mathbf{U}_0$ trovare $\mathbf{u}$,$p$,$\mathbf{X}$,$\mathbf{U}$,$P$ che soddisfano
+\begin{equation}
+\begin{aligned}
+\rho \left ( \frac{\partial \mathbf{u}}{\partial t} + \mathbf{u} \cdot \Nabla \mathbf{u} \right ) &= \eta \Delta \mathbf{u} - \nabla p \\
+\Nabla \cdot \mathbf{u} &= 0 \\
+\mathbf{u}(\mathbf{x},t)&=0 \\
+\mathbf{u}(\mathbf{x},0)&=\mathbf{u}_0(\mathbf{x}) \\
+\frac{\partial \mathbf{U}}{\partial t} &= \nabla_s\cdot\mathbb{P}\\
+\frac{\partial \mathbf{X}}{\partial t} &= \mathbf{U}\\
+\mathbb{P} &= \frac{\partial W}{\partial \mathbb{F}}-|\mathbb{F}|\mathbb{P}\mathbb{F}^{-T}+\eta|\mathbb{F}|\frac{\partial}{\partial t}(\mathbb{F}\mathbb{F}^{-T}+(\mathbb{F}\mathbb{F}^{-T})^{T})\mathbb{F}^{-T}\\
+|\mathbb{F}|&=1\\
+\mathbf{X}(\mathbf{s},0)&=\mathbf{X}_0(\mathbf{s})\\
+\mathbf{U}(\mathbf{s},0)&=\mathbf{U}_0(\mathbf{s})\\
+-p\mathbf{n}+2\eta\mathcal{D}(\mathbf{n})\mathbf{n}&=\mathbb{P}\mathbb{F}^T\mathbf{n}\\
+\mathbf{u}(\mathbf{X}(\mathbf{s},t))&=\mathbf{U}(\mathbf{s},t)
+\end{aligned}
+\end{equation}
+\end{problem}
+Si può notare che le equazioni 1-? sono le equazioni di Navier-Stokes, le seguenti equazioni quelle che governano il comportamento della strutture mentre le ultime due sono le equazioni che legano le variabili euleriane e lagrangiane.[]
+
+\subsection{Le equazioni del metodo \IB}
+Pur essendo possibile studiare il problema da un punto di vista teorico lasciando ogni equazione definita nelle sue variabili naturali, euleriane per il fluido, lagrangiane per la struttura, questo rende difficile studiare il problema dal punto di vista dell'approssimazione numerica. Il metodo \emph{Immersed Boundary} cerca di risolvere questa difficoltà senza scrivere esplicitamente le equazioni in un insieme di variabili comuni, ma piuttosto lega le grandezze dei due ambienti mediante l'utilizzo della funzione $\delta$ di Dirac.
+\begin{problem}
+Date $\mathbf{u}_0$, $\mathbf{X}_0$ e $\mathbf{U}_0$ trovare $\mathbf{u}$,$p$,$\mathbf{X}$,$\mathbf{U}$,$P$ che soddisfino
+\begin{equation}
+\begin{aligned}
+\rho \left ( \frac{\partial \mathbf{u}}{\partial t} + \mathbf{u} \cdot \Nabla \mathbf{u} \right ) = \eta \Delta \mathbf{u} - \nabla p \\
+\Nabla \cdot \mathbf{u} = 0 \\
+\mathbf{u}(\mathbf{x},t)=0 \\
+\mathbf{u}(\mathbf{x},0)=\mathbf{u}_0(\mathbf{x}) \\
+\frac{\partial \mathbf{X}}{\partial t} = \mathbf{u}(\mathbf{X}(\mathbf{s},t))\\
+\mathbf{X}(\mathbf{s},0)=\mathbf{X}_0(\mathbf{s})\\
+%\rho(\mathbf{x},t)=\int M(\mathbf{s},t)\delta(\mathbf{x}-\mathbf{X}(\mathbf{s},t))\,d\mathbf{s}\\
+\mathbf{f}(\mathbf{x},t)=\int \mathbf{F}(\mathbf{s},t)\delta(\mathbf{x}-\mathbf{X}(\mathbf{s},t))\,d\mathbf{s}\\
+\frac{\partial\mathbf{X}}{\partial t}(\mathbf{s},t)=\mathbf{u}(\mathbf{X}(\mathbf{s},t),t)=\int \mathbf{u}(\mathbf{x},t)\delta(\mathbf{x}-\mathbf{X}(\mathbf{s},t))\,d\mathbf{x}\\
+\mathbf{F}(\mathbf{s},t)=-\frac{\partial W}{\partial \mathbf{X}}\\
+\end{aligned}
+\end{equation}
+\end{problem}
+La formulazione originale [Peskin1], sfruttando il metodo delle differenze finite, prevede di dover approssimare opportunamente la funzione $\delta$ di Dirac. Usando il metodo degli elementi finiti non è necessario approssimare la funzione $\delta$ di Dirac che viene infatti trattata in modo naturale nella formulazione debole delle equazioni.
+
+\subsection{Formulazione iperelastica}
+Le equazioni del paragrafo precedente sono adatte per descrivere strutture elastiche di codimensione pari a $1$, ma non riescono a descrivere correttamente le forze di trasmissione tra il corpo e il fluido quando la struttura ha codimensione $0$. Per poter fare ciò imponiamo che il tensore di Cauchy sia continuo in tutto lo spazio e che sia possibile decomporlo come
+\begin{equation}
+\begin{aligned}
+\boldsymbol{\sigma} = &\boldsymbol{\sigma}_f\\
+                    &\boldsymbol{\sigma}_f + \boldsymbol{\sigma}_s\\
+\end{aligned}
+\end{equation}
+e che lo stesso sia possibile per il primo tensore di Piola-Kirchhoff
+\begin{equation}
+\begin{aligned}
+\mathbb{P} = &\mathbb{P}_f\\
+                    &\mathbb{P}_f + \mathbb{P}_s\\
+\end{aligned}
+\end{equation}
+
+E' Possibile quindi riscrivere il principio dei lavori virtuali come
+\begin{equation}
+\int_\Omega \rho\frac{D\mathbf{u}}{Dt}\cdot \mathbf{v} \, d\mathbf{x} + \int_\Omega \boldsymbol{\sigma}_f \boldsymbol{:} \Nabla \mathbf{v} \, d\mathbf{x} + \int_{\mathcal{B}_t} \boldsymbol{\sigma}_s \boldsymbol{:} \Nabla \mathbf{v} \, d\mathbf{x} = 0
+\end{equation}
+e quindi
+\begin{equation}
+\int_\Omega \rho\frac{D\mathbf{u}}{Dt}\cdot \mathbf{v} \, d\mathbf{x} + \int_\Omega \boldsymbol{\sigma}_f \boldsymbol{:} \Nabla \mathbf{v} \, d\mathbf{x} + \int_\mathcal{B} \mathbb{P}_s \boldsymbol{:} \Nabla_s \mathbf{V} \, d\mathbf{s} = 0
+\end{equation}
+dove $\mathbf{V}(\mathbf{s},t)=\mathbf{V}(X(\mathbf{s},t))$.
+Integrando ora per parti si ottiene
+\begin{equation}
+\int_\Omega \left ( \rho\frac{D\mathbf{u}}{Dt}\cdot \mathbf{v} \, d\mathbf{x} - \nabla \cdot \boldsymbol{\sigma}_f \right ) \cdot \mathbf{v} \, d\mathbf{x} = \int_\mathcal{B} (\nabla_s \cdot\mathbb{P}_s) \cdot \mathbf{V} \, d\mathbf{s} -\int_{\partial \mathcal{B}} \mathbb{P}_s\mathbf{N} \cdot \mathbf{V} \, dA
+\end{equation}
+Definite la densità di forza interna $G$ e la forza  di trassissione $T$ come
+$$\mathbf{G}(\mathbf{s},t)=\nabla_s \mathbb{P}_s(\mathbf{s},t)$$
+$$\mathbf{T}(\mathbf{s},t)=-\mathbb{P}_s(\mathbf{s},t)\mathbf{N}(\mathbf{s})$$
+possiamo riscrivere i due termini al secondo membro dell'equazione [] come
+\begin{equation}
+\int_\mathcal{B} (\nabla_s \cdot\mathbb{P}_s) \cdot \mathbf{V} \, d\mathbf{s} = \int_\mathcal{B}(\nabla_s\cdot\mathbb{P}_s)\cdot\int_\Omega\mathbf{v}(\mathbf{x})\boldsymbol{\delta}(\mathbf{x}-\mathbf{X}(\mathbf{s},t))\, d\mathbf{x}\, d\mathbf{s} = \int_\Omega \int_\mathcal{B}(\nabla_s\cdot\mathbb{P}_s)\boldsymbol{\delta}(\mathbf{x}-\mathbf{X}(\mathbf{s},t))\, d\mathbf{s}\cdot\mathbf{v}(\mathbf{x})\, d\mathbf{x} = \int_\Omega \mathbf{g}(\mathbf{x},t) \cdot\mathbf{v}(\mathbf{x})\, d\mathbf{x}
+\end{equation}
+e
+\begin{equation}
+\int_{\partial \mathcal{B}} \mathbb{P}_s(\mathbf{s},t)\mathbf{N}(\mathbf{s}) \cdot \mathbf{V}(\mathbf{s},t)) \, dA = \int_{\partial \mathcal{B}} \mathbb{P}_s(\mathbf{s},t)\mathbf{N}(\mathbf{s}) \cdot \int_\Omega\mathbf{v}(\mathbf{x})\boldsymbol{\delta}(\mathbf{x}-\mathbf{X}(\mathbf{s},t))\, d\mathbf{x}\, dA = \int_\Omega \int_{\partial \mathcal{B}}\mathbb{P}_s(\mathbf{s},t)\mathbf{N}(\mathbf{s})\boldsymbol{\delta}(\mathbf{x}-\mathbf{X}(\mathbf{s},t)) \, dA \cdot \mathbf{v}(\mathbf{x})\, d\mathbf{x} = - \int_\Omega \mathbf{t}(\mathbf{x},t) \cdot\mathbf{v}(\mathbf{x})\, d\mathbf{x} 
+\end{equation}
+e quindi possiamo riscrivere [] come
+\begin{equation}
+\rho\frac{D\mathbf{u}}{Dt}-\nabla\cdot\bsigma_f = \mathbf{g}+\mathbf{t} = \int_{\mathcal{B}}\mathbf{G}(\mathbf{s},t)\boldsymbol{\delta}(\mathbf{x}-\mathbf{X}(\mathbf{s},t))\,d\mathbf{s}+
+\int_{\partial \mathcal{B}}\mathbf{T}(\mathbf{s},t)\boldsymbol{\delta}(\mathbf{x}-\mathbf{X}(\mathbf{s},t))\,dA
+\end{equation}
+e il problema [] diventa
+\begin{problem}
+	\begin{equation}
+\begin{aligned}
+	\rho \left ( \frac{\partial \mathbf{u}}{\partial t} + \mathbf{u} \cdot \Nabla \mathbf{u} \right ) = \eta \Delta \mathbf{u} - \nabla p \\
+	\Nabla \cdot \mathbf{u} = 0 \\
+	\mathbf{u}(\mathbf{x},t)=0 \\
+	\mathbf{u}(\mathbf{x},0)=\mathbf{u}_0(\mathbf{x}) \\
+	\frac{\partial \mathbf{X}}{\partial t} = \mathbf{u}(\mathbf{X}(\mathbf{s},t))\\
+	\mathbf{X}(\mathbf{s},0)=\mathbf{X}_0(\mathbf{s})\\
+	%\rho(\mathbf{x},t)=\int M(\mathbf{s},t)\delta(\mathbf{x}-\mathbf{X}(\mathbf{s},t))\,d\mathbf{s}\\
+		\mathbf{g}(\mathbf{x},t)=\int_{\mathcal{B}}\mathbf{G}(\mathbf{s},t)\boldsymbol{\delta}(\mathbf{x}-\mathbf{X}(\mathbf{s},t))\,d\mathbf{s}\\
+	\mathbf{t}(\mathbf{x},t)=\int_{\partial \mathcal{B}}\mathbf{T}(\mathbf{s},t)\boldsymbol{\delta}(\mathbf{x}-\mathbf{X}(\mathbf{s},t))\,dA\\
+		\mathbf{G}(\mathbf{s},t)=\Nabla_{\mathbf{s}}\cdot\mathbb{P}_{\mathbf{s}}(\mathbf{s},t)\\
+			\mathbf{T}(\mathbf{s},t)=-\mathbb{P}_{\mathbf{s}}(\mathbf{s},t)\mathbf{N}(\mathbf{s})\\
+	\mathbf{f}(\mathbf{x},t)=\int \mathbf{F}(\mathbf{s},t)\delta(\mathbf{x}-\mathbf{X}(\mathbf{s},t))\,d\mathbf{s}\\
+	\frac{\partial\mathbf{X}}{\partial t}(\mathbf{s},t)=\mathbf{u}(\mathbf{X}(\mathbf{s},t),t)=\int \mathbf{u}(\mathbf{x},t)\delta(\mathbf{x}-\mathbf{X}(\mathbf{s},t))\,d\mathbf{x}\\
+	\mathbf{F}(\mathbf{s},t)=-\frac{\partial W}{\partial \mathbf{X}}\\
+\end{aligned}
+\end{equation}
+\end{problem}
+
+\subsection{[Codimensione e deformazione]}
+[?]
+
+\section{Formulazione variazionale}
+La versione originale del metodo Immersed Boundary sviluppata da Peskin sfrutta il metodo delle differenze finite per la discretizzazione spaziale delle equazioni. Per fare ciò è necessario introdurre una approssimazione $\boldsymbol{\delta}_h$ della funzione $\boldsymbol{\delta}$, tendente a $\boldsymbol{\delta}$ per $h\to 0$, in modo che le sue proprietà permettano di ottenere la stabilità e una buona velocità di convergenza del metodo numerico.[vedi 49 di heltai,articoli peskin]
+
+La formulazione variazionale permette di superare questo problema in quanto la funzione $\boldsymbol{\delta}$ è gestibile senza necessità di approssimazione in forma debole.
+
+Siano 
+$$V=H^1_0(\Omega)^d=\left \{ \mathbf{v}\in L^2(\Omega)^d\quad\texttt{t.c}\quad\Nabla\mathbf{v}\in L^2(\Omega)^{d\times d} \right \}$$
+$$Q=L^2_0(\Omega)=\left \{q\in L^2(\Omega)\tc\int_{\Omega}q=0 \right \}$$ 
+$$S=\left \{\mathbf{X}\in H^1(\mathcal{B})^d\cap W^{1,\infty}\tc\vert\mathbb{F}\vert =\vert\Nabla_{\mathbf{s}}\mathbf{X}\vert>0,\mathbf{X}(\mathcal{B})\subseteq\Omega \right \}$$
+gli spazi delle funzioni test. Introduciamo ora il problema in forma debole
+\begin{problem}
+Dati $\mathbf{u}_0\in V$, $\mathbf{X}_0\in S$ trovare $(\mathbf{u}(t),p(t),\mathbf{X}(t))\in V\times Q\times S$ tali che
+$$\rho\frac{d}{dt}\ps{\mathbf{u}(t)}{\mathbf{v}}+a\ps{\mathbf{u}(t)}{\mathbf{v}}+c({\mathbf{u}(t)},{\mathbf{u}(t)},{\mathbf{v}})+b(p(t),\mathbf{v})=\ps{\mathbf{f}(t)}{\mathbf{v}}$$
+$$b(\mathbf{u}(t),q)=0$$
+$$\ps{\mathbf{f}(t)}{\mathbf{v}}=-\int_{\mathcal{B}}\mathbb{P}(\mathbf{s},t)\boldsymbol{:}\Nabla_{\mathbf{s}}\mathbf{v}(\mathbf{X}(\mathbf{s},t))\, d\mathbf{s}$$
+$$\mathbf{u}(\mathbf{x},0)=\mathbf{u}_0(\mathbf{x})$$
+$$\frac{\partial\mathbf{X}}{\partial t}(\mathbf{s},t)=\mathbf{u}(\mathbf{X}(\mathbf{s},t),t)$$
+$$\mathbf{X}(\mathbf{s},0)=\mathbf{X}_0(\mathbf{s})$$
+\end{problem}
+dove $(\cdot\,,\cdot)$ rappresenta il prodotto scalare tra i due termini,
+$$a(\mathbf{u},\mathbf{v})= \int_\Omega\eta\Nabla\mathbf{u}\Nabla\mathbf{v}\, d\mathbf{x}$$
+$$b(\mathbf{u},p)=\int_\Omega p\Nabla\cdot\mathbf{u}\, d\mathbf{x}$$ e 
+$$c(\mathbf{u},\mathbf{v},\mathbf{w})=\int_\Omega\rho(\mathbf{w}\cdot\Nabla\mathbf{u})\mathbf{v}\, d\mathbf{x}$$.
+
+Un ulteriore vantaggio della formulazione variazionale è la possibilità di evitare la distinzione tra le forze $\mathbf{G}$ e $\mathbf{T}$.
+
+\paragraph{Formulazione interamente variazionale}
+Nel problema precedente l'evoluzione del corpo è ancora trattata in forma forte. \'E possibile trattare in forma variazionale anche l'equazione [] facendo diventare il problema [] il seguente
+\begin{problem}
+Dati $\mathbf{u}_0\in V$, $\mathbf{X}_0\in S$ trovare $(\mathbf{u}(t),p(t),\mathbf{X}(t))\in V\times Q\times S$ tali che
+$$\rho\frac{d}{dt}\ps{\mathbf{u}(t)}{\mathbf{v}}+a\ps{\mathbf{u}(t)}{\mathbf{v}}+c({\mathbf{u}(t)},{\mathbf{u}(t)},{\mathbf{v}})+b(p(t),\mathbf{v})=\ps{\mathbf{f}(t)}{\mathbf{v}}$$
+$$b(\mathbf{u}(t),q)=0$$
+$$\ps{\mathbf{f}(t)}{\mathbf{v}}=-\int_{\mathcal{B}}\mathbb{P}(\mathbf{s},t)\boldsymbol{:}\Nabla_{\mathbf{s}}\mathbf{v}(\mathbf{X}(\mathbf{s},t))\, d\mathbf{s}$$
+$$\mathbf{u}(\mathbf{x},0)=\mathbf{u}_0(\mathbf{x})$$
+$$\frac{d}{dt}((\mathbf{X}(t),\mathbf{Y}))-((\mathbf{u}(\mathbf{X}(t),\mathbf{Y}))=0$$
+$$\mathbf{X}(\mathbf{s},0)=\mathbf{X}_0(\mathbf{s})$$
+\end{problem}
+dove $(( , ))$ rapprensenta l'opportuno prodotto scalare.
+
+Introduciamo l'operatore di interpolazione tra lo spazio euleriano e lagrangiano $\mathbf{S}(\mathbf{X})$ definito come
+$$\mathbf{S}(\mathbf{X})\mathbf{Y}(\mathbf{v}) = \ps{\mathbf{Y}}{\mathbf{S}^T(\mathbf{X})\mathbf{v}} = \int_\mathcal{B}\mathbf{Y}\cdot\mathbf{v}(\mathbf{X})\, d\mathbf{s}$$.
+Osserviamo che a seconda della codimensione della struttura elastica l'operatore $\mathbf{S}(\mathbf{X})$ è ben definito tra spazi differenti, in particolare se $m=d$ allora 
+\begin{equation}
+\mathbf{S}(\mathbf{X}):(H^1(\mathcal{B})^d)'\mapsto H^{-1}(\Omega)^d
+\end{equation}
+\begin{equation}
+\mathbf{S}^T(\mathbf{X}):H^1_0(\Omega)^d\mapsto H^{1}(\mathcal{B})^d
+\end{equation}
+Nel caso $m=d-1$, se si ipotizza di non poter chiedere che $\mathbf{Y}$ possa essere più regolare di $(H^1(\mathcal{B})^d)'$, allora è necessario che la traccia di $\mathbf{u}$ e $\mathbf{v}$ siano almeno in $H^1(\mathcal{B})^d$ e quindi che $\mathbf{u},\mathbf{v}\in H^{3/2+\epsilon}(\Omega)^d$ con $\epsilon>0$.
+L'operatore $\mathbf{S}(\mathbf{X})$ sarà definito tra i seguenti spazi
+\begin{equation}
+\mathbf{S}(\mathbf{X}):(H^1(\mathcal{B})^d)'\mapsto H^{-\frac{3}{2}-\epsilon}(\Omega)^d
+\end{equation}
+\begin{equation}
+\mathbf{S}^T(\mathbf{X}):H^{\frac{3}{2}+\epsilon}_0(\Omega)^d\mapsto H^{1}(\mathcal{B})^d
+\end{equation}
+La forza elasitica diventa
+\begin{equation}
+\ps{\mathbf{f}(t)}{\mathbf{v}}[H^{-1}][H^1_0] = \ps{\mathbf{S}(\mathbf{X})\mathbf{D}^T\mathbb{P}(\mathbf{X})}{\mathbf{v}}[H^1_0]=\ps{\mathbf{D}^T\mathbb{P}(\mathbf{X})}{\mathbf{S}^T(\mathbf{X})\mathbf{v}}
+\end{equation}
+e l'equazione [] può essere scritta come
+\begin{equation}
+\mathbf{M}\left (\frac{\partial\mathbf{X}}{\partial t}-\mathbf{S}^T(\mathbf{X})\mathbf{u}\right )=0
+\end{equation}
+e il problema può essere riscritto negli spazi duali come
+\begin{problem}
+$$M\frac{\partial\mathbf{u}}{\partial t}+A\mathbf{u}+N(\mathbf{u})\mathbf{u}+B^{T}p+\mathbf{S}(\mathbf{X})\mathbf{D}^{T}\mathbb{P}(\mathbf{X})=0 \qquad \text{in\quad}\mathbf{V}'$$
+$$B\mathbf{u}=0 \qquad \text{in\quad}Q'=Q$$
+$$M(\frac{\partial \mathbf{X}}{\partial t}-\mathbf{S}^{T}(\mathbf{X})\mathbf{u}) \qquad \text{in\quad}(H^{1}(\mathcal{B})^{d})'$$
+$$\mathbf{u}(\mathbf{x},0)=\mathbf{u}_{0}(\mathbf{x}) \qquad \forall\mathbf{x}\in\Omega$$
+$$\mathbf{X}(\mathbf{s},0)=\mathbf{X}_{0}(\mathbf{s}) \qquad \forall\mathbf{s}\in\mathcal{B}$$
+\end{problem}
+
+\subsection{Stima dell'energia}
+\begin{lemma}
+Per $t \in (0,T)$, sia $\mathbf{u}(t)\in H^1_0(\Omega)^d$, $p(t)\in L^2_0(\Omega)$ e $\mathbf{X}(t)\in H^1_0(\mathcal{B})^m [?]$ la soluzione del problema [] allora $$\frac{1}{2}\frac{d}{dt}\Vert\mathbf{u}(t)\Vert^2_{0,\Omega}+\eta\Vert\Nabla\mathbf{u}(t)\Vert^2_{0,\Omega}+\frac{d}{dt}E[\mathbf{X}(t)]=0$$
+dove 
+$$E[\mathbf{X}(t)]=\int_\mathcal{B}W\left (\frac{\partial \mathbf{X}(t)}{\partial \mathbf{s}}\right )\, d\mathbf{s}$$
+\end{lemma}
+[Dimostrazione.]
+Il lemma prova che l'energia totale del sistema fluido-struttura, data dalla somma di energia cinetica e potenziale, è limitata dall'energia totale iniziale e che la differenza di energia tra due tempi qualsiasi è data dall'energia dissipata in conseguenza della viscostità.
+
+\subsection{Risultati vari}
+Il problema dell'esistenza e dell'unicità delle soluzioni delle equazioni di Navier-Stokes per i fluidi, delle equazioni dei materiali viscoelastici e delle equazioni combinate per le interazioni fluido-struttura [in dimensione 3, magari anche 2] è ancora aperto. Qui viene riportata la dimostrazione fornita in  [] per un problema modello del metodo IB in dimensione 1 mediante iterazioni di punto fisso. [...]
+
+\'E possibile determinare una stima a priori per il limite superiore della norma di $\mathbf{u}$ e $\mathbf{X}$. La dimostrazione è semplice in codimensione zero, mentre è necessario più lavoro per il caso in codimensione uno.
+
+\begin{theorem}
+Sia 
+\begin{equation}
+0<\gamma\leq\vert\mathbb{F}\vert=\vert\Nabla\mathbf{s}\mathbf{X}\vert\quad\forall\mathbf{s}\in\mathcal{B},\forall\mathbf{X}\in S
+\end{equation}
+e 
+\begin{equation}
+\mathbb{P}=\mu\mathbb{F}
+\end{equation}
+ con $\mu>0$ allora le soluzione dei problemi [] soddisfano
+$$\Vert\mathbf{u}\Vert^2_{C^0([0,T];L^2(\Omega)^d)}\leq C_0\mathcal{E}_0$$
+$$\Vert\mathbf{X}\Vert^2_{C^0([0,T];H^1(\Omega)^d)}\leq C_1\mathcal{E}_0$$
+con
+$$\mathcal{E}_0=\rho\frac{1}{2}\Vert\mathbf{u}_0\Vert^2_{0,\Omega}+\mu\frac{1}{2}\Vert\Nabla_\mathbf{s}\mathbf{X}_0\Vert^2_{0,\mathcal{B}}$$
+\end{theorem}
+La prima condizione impone un limite a quanto è possibile comprimere la struttura elastica. In codimensione zero, essendo la struttura incomprimible, vale $|\mathbb{F}|\equiv1$. In codimensione zero, nonostante l'incomprimibilita, $\mathbb{F}$ pur essendo sempre maggiore di zero può diventare nel corso del moto arbitrariamente piccolo.
+[... heltai 2.4.1]
+
+\paragraph{Esistenza e unicità}
+Una delle principali difficoltà nello studio del metodo IB si trova nel legame tra il moto del corpo e del fluido attraverso l'equazione 
+$$\mathbf{u}(\mathbf{X})=\frac{\partial\mathbf{X}}{\partial t}$$
+in cui sia $\mathbf{u}$ che $\mathbf{X}$ sono incognite e non c'è modo di linearizzare la loro relazione se non assumendo che la deformazione del corpo sia piccola.
+
+[]
+
+Siano $$V_0=\{\mathbf{v}\in V\tc\Nabla\cdot\mathbf{v}=0 \}$$ il sottospazio di $V$ delle funzioni a divergenza nulla e $$S_0=\{\mathbf{Y}\in S\tc\vert\Nabla_{\mathbf{s}}\mathbf{Y}\vert=1$$ il sottospazio delle deformazioni che conservano il volume. Siano inoltre
+$$L(\mathbf{u}):H^1_0(\Omega)^d\mapsto H^{-1}(\Omega)^d$$
+$$L(\mathbf{u})\mathbf{u}=A\mathbf{u}+N(\mathbf{u})\mathbf{u}$$
+l'operatore di Navier-Stokes e 
+$$T:A\times]0,T[\mapsto A$$
+$$T(A)=\int^t_0A(\tilde{t})\, d\tilde{t}$$
+allora le equazioni del metodo IB possono essere riscritte come
+$$M\mathbf{u}+TL(\mathbf{u})\mathbf{u}+T\mathbf{S}(\mathbf{X})\mathbf{D}^T\mathbb{P}(\mathbf{X})=M\mathbf{u}_0$$
+$$\mathbf{M}\mathbf{X}-T\mathbf{M}\mathbf{S}^T(\mathbf{X})\mathbf{u}=\mathbf{M}\mathbf{X}_0$$
+Per semplificare le difficoltà causate dall'operatore non-lineare  $\mathbf{S}(\mathbf{X})$ introduciamo l'operatore $\text{IB}:S\times[0,T[\mapsto[0,T[$ in modo che $\mathbf{X}=\text{IB}(\mathbf{Y})$ sia la soluzione di
+$$M\mathbf{u}+TL(\mathbf{u})\mathbf{u}+T\mathbf{S}(\mathbf{Y})\mathbf{D}^T\mathbb{P}(\mathbf{X})=M\mathbf{u}_0$$
+$$\mathbf{M}\mathbf{X}-T\mathbf{M}\mathbf{S}^T(\mathbf{Y})\mathbf{u}=\mathbf{M}\mathbf{X}_0$$
+ [soluzione a tempi discreti]
+ [ci sono vari problemi su dove sta Y, è meglio prendere passi temporali piccoli]
+Cerchiamo ora un sottoinsieme convesso di $S$ in cui cercare un punto fisso dell'operatore $\text{IB}$. Sia 
+$$B=\{ \mathbf{Y}\in S\times[0,T[\tc\mathbf{Y}(0)=\mathbf{X}_0\in S_0,\Vert\mathbf{Y}\Vert^2_{C^0(]0,T[,H^1(\mathcal{B})^d)}\leq C_1\mathcal{E}_0\}$$
+\begin{theorem}
+Dati $\mathbf{u}_0\in V_0$ e $\mathbf{X}_0$ e ipotizzando che
+$$\forall\mathbf{Y}\in\mathbf{B}\exists\mathbf{X}=\text{IB}(\mathbf{Y})\in S$$
+$$\mathbb{P}=\mu\mathbb{F}, \mu>0$$
+allora $\mathbf{X}\in\mathbf{B}$ e esiste un punto fisso $\overline{\mathbf{X}}=\text{IB}(\overline{\mathbf{X}})$ in $C^0()$.
+\end{theorem}
+\begin{proof}
+Sia $\mathbf{X}^{k}(\mathbf{s},t)$ il $k$-esimo termine ottenuto mediante l'iterazione e cerchiamo di determinare il $k+1$-esimo termine risolvendo
+$$M\mathbf{u}^{k+1}+TL(\mathbf{u}^{k+1})\mathbf{u}^{k+1}+T\mathbf{S}(\mathbf{X}^{k})\mathbf{D}^{T}\mathbb{P}(\mathbf{X}^{k+1})=M\mathbf{u}_{0}\qquad\text{in}\quad\mathbf{V }'$$
+$$M\mathbf{X}^{k+1}-T\mathbf{S}^{T}(\mathbf{X}^{k})\mathbf{u}^{k+1} = M\mathbf{X}_0\qquad\text{in}\quad (H^{1}(\mathcal{B})^{d})'$$
+\end{proof}
+\paragraph{Il problema in codimensione 1}
+

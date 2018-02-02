@@ -1,0 +1,34 @@
+% preamble.tex
+
+\newtheorem{theorem}{Teoerma}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposizione}
+\newtheorem{corollary}[theorem]{Corollario}
+\newtheorem{problem}[theorem]{Problema}
+
+\newenvironment{proof}[1][Dimostrazione]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}]}{\end{trivlist}}
+\newenvironment{definition}[1][Definizione]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}]}{\end{trivlist}}
+\newenvironment{example}[1][Esempio]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}]}{\end{trivlist}}
+\newenvironment{remark}[1][Osservazione]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}]}{\end{trivlist}}
+
+\newcommand{\qed}{\nobreak \ifvmode \relax \else
+    \ifdim\lastskip<1.5em \hskip-\lastskip
+     \hskip1.5em plus0em minus0.5em \fi \nobreak
+     \vrule height0.75em width0.5em depth0.25em\fi}
+
+\newcommand{\bsigma}{\boldsymbol{\sigma}}
+\newcommand{\Nabla}{\boldsymbol{\nabla}}
+\newcommand{\tc}{\ \text{t.c.}\ }
+\DeclareDocumentCommand{\ps}{m m o o}{
+\IfNoValueTF{#4}{
+  \IfNoValueTF{#3}{ (#1,#2) }{ _{{#3}'}(#1,#2)_{#3} } 
+  }{_{#3}(#1,#2)_{#4}}
+}
+\newcommand{\IB}{\textit{Immersed Boundary}}
+\DeclareMathOperator{\volume}{volume}
+\DeclareMathOperator{\traccia}{traccia}
+
