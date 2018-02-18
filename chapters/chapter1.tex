@@ -1,13 +1,16 @@
 % introduction.tex
+% $$\ps{f}{v}[H][A]$$
 
 \chapter{Principi di Fluidodinamica ed Elasiticità}
 
-% $$\ps{f}{v}[H][A]$$
+La meccanica del continuo studia i corpi, siano essi solidi, liquidi o gassosi, come se il materiale che li compone si comportasse allo stesso modo ad ogni scala per quanto piccola, ignorando gli effetti dovuti alla struttura microscopica/atomica. In questo modo è possibile studiare questi corpi sfuttando gli strumenti del calcolo infinitesimale.
+
+Le equazione che governano il comportamento dei corpi possono essere distinte in leggi di conservazione, che sono principi fisici generali, e da leggi costitutive che rappresentano il comportamento dello specifico materiale e variano da materiale a materiale e regolano la risposta alla deformazione.
 
 \section{Le coordinate euleriane e le coordinate lagrangiane, configurazione di riferimento e deformazione}
 
 Sia $\Omega \subset \mathbb{R}^{2,3}$ una regione dello spazio contenente un corpo continuo, allora $\mathbf{x} \in \Omega$ è un punto in coordinate euleriane e rappresenta un punto fisso nello spazio, detto punto spaziale o coordinata euleriana. 
-Sia $\omega \subset \mathbb{R}^{2,3}$ la configurazione di riferimento del corpo in esame, allora $\mathbf{s} \in \omega$ è un punto in coordinate lagrangiane e rappresenta un punto ben definito del corpo, detto punto materiale o coordinata lagrangiana.
+Sia $\omega \subset \mathbb{R}^{2,3}$ la configurazione di riferimento del corpo in esame, allora $\mathbf{s} \in \omega$ è un punto in coordinate lagrangiane e rappresenta un punto ben definito del corpo che si muove nello spazio, detto punto materiale o coordinata lagrangiana.
 La relazione tra i due sistemi di rifemento è data dalle funzioni
 \begin{equation*}  
 \mathbf{X}:\omega \times [0,T] \to \Omega
@@ -36,7 +39,29 @@ L'ipotesi che $\mathbf{X}$ sia invertibile implica che $\mathbb{F}$ abbia determ
 
 Il valore di $|\mathbb{F}|$ rappresenta il rapporto tra la misura della regione attorno al punto $\mathbf{s}$ e la misura della regione attorno al punto $\mathbf{X}(\mathbf{s},t)$.
 
-La derivata temporale nei due riferimenti.
+Osserviamo che la derivata temporale di grandezze espresse nei diversi sistemi di riferimento rappresenta, a seconda del sistema di riferimento, situazioni diverse.
+Nel caso del riferimento lagrangiano rappresenta la variazione di una quantità fisica nel punto in esame, nel caso del riferimento euleriano non ha un'interpretazione fisica diretta perchè oltre alla variazione della grandezza bisogna anche considerare le variazioni indotte dal moto del corpo.
+
+Sia $\Phi(\mathbf{x},t)$ una grandezza espresse in coordinate euleriane, allora
+
+$$
+\frac{d\Phi(\mathbf{x},t)}{dt} = \frac{\partial \Phi(\mathbf{X}(\mathbf{s},t))}{\partial t} = 
+$$
+
+$$
+\frac{\partial \Phi(\mathbf{x},t)}{\partial t} + \frac{\partial\mathbf{X}(\mathbf{s},t)}{\partial t}|_{\mathbf{s} = 
+\mathbf{q}(\mathbf{x},t)}\cdot \Nabla\Phi(\mathbf{x},t) =
+$$
+
+$$
+\frac{\partial \Phi(\mathbf{x},t)}{\partial t} +
+\mathbf{u}(\mathbf{x},t)\cdot \Nabla\Phi(\mathbf{x},t)
+$$
+
+dove $\mathbf{u}(\mathbf{x},t) = \frac{\partial\mathbf{X}(\mathbf{s},t)}{\partial t}|_{\mathbf{s} = \mathbf{q}(\mathbf{x},t)}$
+è la velocità della particella del corpo che al tempo $t$ si trova nella posizione $\mathbf{x}$.
+
+$\frac{D\Phi}{Dt} = \frac{d\Phi}{dt}$ è detta derivata materiale e esplicita come nella variazione di una quantità in coordinate euleriane bisogna considerare anche la variazione dovuta al moto del corpo.
 
 \subsection{Il teorema del trasporto}
 
