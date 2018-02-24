@@ -2,13 +2,13 @@
 % $$\ps{f}{v}[H][A]$$
 
 \chapter{Principi di Fluidodinamica ed Elasiticità}
-
+%The Finite Element Immersed Boundary Method, L. Heltai ,Ph.D. Thesis , 2006, capitolo 1 19-35
 La meccanica del continuo studia i corpi, siano essi solidi, liquidi o gassosi, come se il materiale che li compone si comportasse allo stesso modo ad ogni scala per quanto piccola, ignorando gli effetti dovuti alla struttura microscopica/atomica. In questo modo è possibile studiare questi corpi sfuttando gli strumenti del calcolo infinitesimale.
 
 Le equazione che governano il comportamento dei corpi possono essere distinte in leggi di conservazione, che sono principi fisici generali, e da leggi costitutive che rappresentano il comportamento dello specifico materiale e variano da materiale a materiale e regolano la risposta alla deformazione.
 
 \section{Le coordinate euleriane e le coordinate lagrangiane, configurazione di riferimento e deformazione}
-
+%The Finite Element Immersed Boundary Method, L. Heltai ,Ph.D. Thesis , 2006, capitolo 1 19-35
 Sia $\Omega \subset \mathbb{R}^{2,3}$ una regione dello spazio contenente un corpo continuo, allora $\mathbf{x} \in \Omega$ è un punto in coordinate euleriane e rappresenta un punto fisso nello spazio, detto punto spaziale o coordinata euleriana. 
 Sia $\omega \subset \mathbb{R}^{2,3}$ la configurazione di riferimento del corpo in esame, allora $\mathbf{s} \in \omega$ è un punto in coordinate lagrangiane e rappresenta un punto ben definito del corpo che si muove nello spazio, detto punto materiale o coordinata lagrangiana.
 La relazione tra i due sistemi di rifemento è data dalle funzioni
@@ -110,6 +110,42 @@ A partire dal lemma si può ricavare un espressione in coordinate euleriane del 
 \end{equation}
 e questo implica che $\Nabla \cdot \mathbf{u} = 0$
 
+%HELTAI
+\paragraph{Il teorema del trasporto}
+
+\begin{theorem}[del Trasporto di Reynolds]
+	Sia $\Phi(\mathbf{x},t)$ una funzione scalare o vettoriale, $\mathcal{P}\subset\mathcal{B}$ una porzione regolare del corpo in esame e  $\mathcal{P}_t = \mathbf{X}(\mathcal{P},t)$ la stessa porzione al tempo $t$ allora
+	$$\forall t \in (0,T)\> \frac{d}{dt}\int_{\mathcal{P}_t}\Phi(\mathbf{x},t)\,d\mathbf{x}=\int_{\mathcal{P}_t}\frac{D\Phi}{Dt}(\mathbf{x},t)+\Phi(\mathbf{x},t)\Nabla\cdot\mathbf{u}(\mathbf{x},t)\,d\mathbf{x}$$
+\end{theorem}
+
+%Mersden Mathematical Foundation of Elasticity
+Sia $\mathcal{B} \in \mathbb{R}^3$ la chiusura di un aperto con bordo a tratti liscio. $\mathcal{B}$ è detta configurazione di riferimento del corpo in esame.
+Una configurazione o deformazione di $\mathcal{B}$ è una mappa $\phi: \mathcal{B} \to \mathbb{R}^3$ sufficientemente liscia, che preserva l'orientamento e invertibile. I punti $\mathbf{X}=(X_1,X_2,X_3) \in \mathcal{B}$ sono detti punti materiali, mentre i punti $\mathbf{x}=(x_1,x_2,x_3) \in \mathbb{R}^3$ sono detti punti spaziali. 
+Un moto di $\mathcal{B}$ è una famiglia di configurazioni dipendente dal tempo $\phi: \mathcal{B} \times [-T,T] \to R^3$.
+La velocità del punto materiale $\mathbf{X}$ è data da 
+$$\mathbf{V}(\mathbf{X},t) = \frac{\partial \phi}{\partial t}(\mathbf{X},t)$$,
+mentre la velocità del punto spaziale $\mathbf{x}=\phi(\mathbf{X})$ è data da
+$$\mathbf{v}(\mathbf{x},t) = \mathbf{V}(\mathbf{X},t)$$.
+L'accelerazione è data da
+$$\mathbf{A}(\mathbf{X},t) = \frac{\partial^2 \phi}{\partial t^2} = \frac{\partial \mathbf{V}}{\partial t} = \frac{\partial \mathbf{v}}{\partial t}+\mathbf{v}\cdot\Nabla\mathbf{v}$$.
+Più in generale se $Q$ è una grandezza materiale e $q$ la relativa grandezza spaziale allora 
+$$
+\frac{\partial Q}{\partial t} = \frac{\partial q}{\partial t} + \mathbf{u}\cdot\Nabla q = \frac{Dq}{Dt}
+$$.
+
+\paragraph{Gradiente di deformazione}
+La matrice delle derivate parziali di $\boldsymbol{\phi}$ 
+$$ \mathbf{F} = D\boldsymbol{\phi}$$
+è detta gradiente di deformazione.
+$\boldsymbol{\phi}$ preserva l'orientazione quindi $\mathbf{F} > 0$. 
+
+$\mathbf{F}$ può essere decomposto in maniera univoca come 
+$$\mathbf{F}=\mathbf{R}\mathbf{U}=\mathbf{V}\mathbf{R}$$
+dove $\mathbf{R}$ è una matrice ortogonale, e quindi rappresenta una rotazione, mentre $\mathbf{U}$ e $\mathbf{V}$ sono matrici simmetriche definite positive e sono dette rispettivamente tensore di stress destro e sinistro. 
+Inoltre $\mathbf{U}=\sqrt{\mathbf{F}^T\mathbf{F}}$ e $\mathbf{V}=\sqrt{\mathbf{F}\mathbf{F}^T}$.
+Siano $\mathbf{C}=\mathbf{F}^T\mathbf{F}=\mathbf{U}^2$ il tensore destro di Cauchy-Green e $\mathbf{b}=\mathbf{F}\mathbf{F}^T=\mathbf{V}^2$ il tensore sinistro di Cauchy-Green.
+Dato che $\mathbf{U}$ e $\mathbf{V}$ sono simili, simmetriche e definite positive allora hanno gli stessi autovalori $\lambda_1$, $\lambda_2$ e $\lambda_3$ reali e positivi, detti tensioni principali. I rispettivi autovettori sono detti direzioni principali. Il valore di $\lambda_i$ rappresenta lo stiramento nella direzione del rispettivo autovettore.
+
 \section{Cenni di Fluidodinamica}
 
 %A Mathematical Introduction to Fluid Mechanics, A. Chorin, J. E. Marsden, 1992 Springer-Verlag Publishing Company Inc., terza edizione (forse preprint quarta) Capitolo 1 1-46
@@ -200,7 +236,6 @@ La legge di conservazione del momento si scrive quindi come
 \begin{equation}\label{eq:conservazione momento integrale}
 \frac{d}{dt} \int_{\mathcal{W}_t} \rho \mathbf{u} \, dV = S_{\partial \mathcal{W}_t} +  \int_{\mathcal{W}_t} \rho \mathbf{b} \, dV
 \end{equation}
-
 
 Questa è equivalente alla forma differenziale se le funzioni sono sufficientemente regolari.
 
@@ -313,7 +348,74 @@ Consideriamo il caso ora di un fluido isoentropico ovvero in cui esiste una funz
 $\nabla w = \frac{1}{\rho} \nabla p$
 [parentesi termodinamica]
 La maggior parte dei gas reali può essere considerata come un fluido isoentropico in cui $p = A \rho ^ \gamma$ con $A$ e $\gamma \geq 1$ costanti.
- 
+
+%MARDSEN
+\paragraph{Leggi di Conservazione}
+\subparagraph{Conservazione della Massa}
+Sia $\boldsymbol{\phi}(\mathbf{x},t)$ un moto di $\mathcal{B}$ e $\rho(\mathbf{x},t)$ la densità di massa del corpo deformato e $\rho_{\mathcal{B}}(\mathbf{X})$ la densità di massa del corpo non deformato. 
+Sia $\mathcal{U}\in\mathcal{B}$ una porzione del corpo $\mathcal{B}$ e  $\mathcal{U}_t=\boldsymbol{\phi}(\mathcal{U},t)$ la stessa porzione al tempo $t$. Allora 
+$$\int_{\mathcal{U}}\rho_{\mathcal{B}}(\mathbf{X})\, d\mathbf{X} = \int_{\mathcal{U}_t}\rho(\mathbf{x},t)\, d\mathbf{x} = $$
+[...] e quindi
+$$\int_{\mathcal{U}_t}\frac{\partial\rho}{\partial t}(\mathbf{x},t)\, d\mathbf{x} =  -\int_{\partial\mathcal{U}_t} \mathbf{J} \cdot \mathbf{n} \, da$$
+\subparagraph{Conservazione del Momento}
+Sia $\mathbf{b}(\mathbf{x},t)$ la forza applicata al corpo $\mathcal{B}$ per unità di massa, e sia $\boldsymbol{\tau}(\mathbf{x},t)$ la forza di superficie applicata per unità di superficie. La coppia $(\mathbf{b},\boldsymbol{\tau})$ è detto carico applicato al corpo. Sia $\mathbf{t}(\mathbf{x},t,\mathbf{n})$ la forza di stress interna al corpo per unità di area nella direzione $\mathbf{n}$. La seconda legge di Newton diventa quindi
+$$\frac{d}{dt}\int_{\mathcal{U}_t}\rho\mathbf{v}\, d\mathbf{x} = \int_{\partial \mathcal{U}_t}\mathbf{t}\, da + \int_{\mathcal{U}_t}\rho\mathbf{b}\, d\mathbf{x} $$.
+Per il teoreme di Cauchy se vale la legge di conservazione del momento allora $\mathbf{t}$ dipende linearmente da  $\mathbf{n}$, e quindi esiste un tensore $\boldsymbol{\sigma}$ tale che 
+$$\mathbf{t}(\mathbf{x},t,\mathbf{n})= \boldsymbol{\sigma}(\mathbf{x},t)\mathbf{n}$$. Questo tensore è detto tensore degli stress di Cauchy. Sfruttando il teorema della divergenza di ottiene
+$$\frac{d}{dt}\int_{\mathcal{U}_t}\rho\mathbf{v}\, d\mathbf{x} = \int_{\mathcal{U}_t}\Nabla\cdot\boldsymbol{\sigma}+\rho\mathbf{b}\, d\mathbf{x} $$.
+Data l'arbitrarietà di ${\mathcal{U}_t}$ si ottiene l'equazione del moto di Cauchy
+$$\rho\frac{d\mathbf{v}}{dt}=\Nabla\cdot\boldsymbol{\sigma}+\rho\mathbf{b}$$. 
+
+%HELTAI
+Le equazioni di conservazione possono essere ricavate applicando il teorema del trasporto.
+
+\paragraph{Conservazione del volume}
+Applicando il teorema di Reynolds alla funzione $\Phi \equiv 1$ si ottiene la legge di conservazione del volume
+$$\frac{d}{dt}\int_{\mathcal{P}_t}\,d\mathbf{x}=\int_{\mathcal{P}_t}\Nabla\cdot\mathbf{u}\,d\mathbf{x}=\int_{\partial\mathcal{P}_t}\mathbf{u}\cdot\mathbf{n}\,d\mathbf{x} $$.
+Se il materiale è incomprimibile allora $\Nabla\cdot\mathbf{u}=0$.
+
+\paragraph{Conservazione della massa}
+Sia $M(\mathbf{s})$ la densità di massa del punto materiale $\mathbf{s}$ e 
+$$\rho(\mathbf{x},t)=M(\mathbf{X}(\mathbf{x},t))$$
+la densità di massa in coordinate euleriane.
+Applicando il principio di conservazione della massa si ottiene
+$$\frac{d}{dt}\int_{\mathcal{P}_t}\rho\,d\mathbf{x}=\int_{\mathcal{P}_t}\frac{D\rho}{Dt}+\rho\Nabla\cdot\mathbf{u}\,d\mathbf{x}=0$$.
+Se inoltre il materiale è incomprimibile allora 
+$$\frac{D\rho}{Dt}(\mathbf{x},t)=0 $$.
+e applicando il teorema di Reynold alla funzione $\rho\Phi$ si ottiene
+$$\frac{d}{dt}\int_{\mathcal{P}_t}\rho\Phi\,d\mathbf{x}=\int_{\mathcal{P}_t}\frac{D(\rho\Phi)}{Dt}+\rho\Phi\Nabla\cdot\mathbf{u}\,d\mathbf{x}=\int_{\mathcal{P}_t}(\frac{D\rho}{Dt}+\rho\Nabla\cdot\mathbf{u})\Phi+\rho\frac{D\Phi}{Dt}\,d\mathbf{x}=\int_{\mathcal{P}_t}\rho\frac{D\Phi}{Dt}\,d\mathbf{x}$$.
+Quindi in un materiale incomprimibile la densità di massa si comporta come una costante per quanto riguarda l'operazione di derivazione materiale.
+
+\paragraph{Conservazione della quantità di moto}
+Sia
+$$\mathbf{p}(\mathcal{P},t)=\int_{\mathcal{P}_t}\rho\mathbf{u}\,d\mathbf{x}$$
+la quantità di moto della porzione di corpo $\mathcal{P}$
+e
+$$\mathbf{L}(\mathcal{P},t)=\int_{\mathcal{P}_t}\rho\mathbf{x}\times\mathbf{u}\,d\mathbf{x}$$
+il momento angolare.
+Applicando il teorema di Reynolds si ottiene
+$$\frac{D\mathbf{p}}{Dt}=\int_{\mathcal{P}_t}\rho\frac{D\mathbf{u}}{Dt}\,d\mathbf{x}$$
+$$\frac{D\mathbf{L}}{Dt}=\int_{\mathcal{P}_t}\rho\mathbf{x}\times\frac{D\mathbf{u}}{Dt}\,d\mathbf{x}$$
+Enunciamo ora la prima legge di Newton
+\begin{theorem}
+	Sia $\mathbf{f}(\mathcal{P},t)$ la risultante delle forze applicate alla porzione di corpo $\mathcal{P}$ al tempo $t$ allora
+	$$\mathbf{f}((\mathcal{P},t))=\frac{D\mathbf{p}}{Dt}((\mathcal{P},t))$$
+\end{theorem}
+Si possono distinguere due tipi di forze, le forze di volume che sono applicate ad ogni punto del materiale, e le forze di contatto, responsabili dell'interazione tra sottoinsiemi del materiale.
+Siano $\mathbf{b}(\mathbf{x},t)$ la densità di forze di volume e $\mathbf{t}(\mathbf{x},t,\mathbf{n})$ la densità di forze di contatto. Verrano considerati solo materiali di Cauchy in cui la densità di forza di contatto dipende solo dalla normale alla superficie e non dalla curvatura della stessa.
+La forza applicata da una regione del corpo su di un'altra regione attraverso la superficie $\mathcal{S}$ è data da
+$$\int_{\mathcal{S}}\mathbf{t}(\mathbf{n},\mathbf{x},t)\,da$$.
+La prima legge di Newton per un materiale di Cauchy diventa
+$$\mathbf{f}((\mathcal{P},t))=\frac{D\mathbf{p}}{Dt}((\mathcal{P},t)) = \int_{\partial\mathcal{P}_t}\mathbf{t}+\int_{\mathcal{P}_t}\mathbf{b}$$
+Che è equivalente a chiedere che valga il principio dei lavori virtulali, cioè che per ogni $\mathcal{P}$, $t$ e per ogni $\mathbf{n}$ esista un tensore simmetrico $\boldsymbol{\sigma}$ detto tensore di stress di Cauchy tale che $\mathbf{t}(\mathbf{x},t,mathbf{n})=\boldsymbol{\sigma}(\mathbf{x},t)\mathbf{n}$ e
+$$\int_{\mathcal{P}_t}\frac{D\mathbf{u}}{Dt}\cdot\mathbf{v}\,d\mathbf{x}+\int_{\mathcal{P}_t}\boldsymbol{\sigma}\boldsymbol{:}\Nabla\mathbf{v}\,d\mathbf{x}=\int_{\partial\mathcal{P}_t}\boldsymbol{\sigma}\mathbf{n}\cdot\mathbf{v}\,d\mathbf{x}+\int_{\mathcal{P}_t}\mathbf{b}\cdot\mathbf{v}\,d\mathbf{x}$$
+per ogni funzione di test $\mathbf{v}$ sufficientemente regolare a supporto compatto in $\Omega$.
+[$$\boldsymbol{\sigma}\boldsymbol{:}\Nabla\mathbf{v}=\sigma_{\alpha\beta}\frac{\partial v_{\alpha}}{\partial x_{\beta}}$$].
+Se $\boldsymbol{\sigma}$ è sufficiente regolare allora vale la versione puntuale dell'equazione
+$$\rho\frac{D\mathbf{u}}{Dt}=\Nabla\cdot\boldsymbol{\sigma}+\mathbf{b}$$.
+Si può notare che in dimensione $d=2$ l'equazione fornisce $2$ condizioni per $2(\mathbf{u})+3(\boldsymbol{\sigma})$ incognite, mentre in dimensione $d=3$ l'equazione fornisce $3$ condizioni per $3(\mathbf{u})+6(\boldsymbol{\sigma})$.
+I rimanenti gradi di libertà possono essere utilizzati per modellizzare vari tipi di materiali differenti, ad esempio i fluidi viscosi e i materiali elastici.
+
 \subsection{Rotazioni e vorticità}
 
 Sia $\mathbf{u} = (u,v,w)$ il campo delle velocità di un fluido allora il suo rotore 
@@ -360,7 +462,7 @@ la parte antisimmetrica di $ \Nabla\mathbf{u}$.
 \end{equation}
 e quindi
 $$\mathbf{S} \cdot \mathbf{h} = \frac{1}{2} \boldsymbol{\xi} \times \mathbf{h}$$.
-\qed%è bruttissimo XD
+\qed
 \end{proof}
 
 La matrice $\mathbf{D}$ è detta tensore della deformazione. Dato che $\mathbf{D}$ simmetrica esiste una base ortonormale in cui è diagonale
@@ -506,47 +608,32 @@ I fluidi governati dalle equazioni di Navier-Stokes incomprimibili non possono a
 
 \section{Teoria matematica dell'elasticità}
 %Mersden Mathematical Foundation of Elasticity
-Sia $\mathcal{B} \in \mathbb{R}^3$ la chiusura di un aperto con bordo a tratti liscio. $\mathcal{B}$ è detta configurazione di riferimento del corpo in esame.
-Una configurazione o deformazione di $\mathcal{B}$ è una mappa $\phi: \mathcal{B} \to \mathbb{R}^3$ sufficientemente liscia, che preserva l'orientamento e invertibile. I punti $\mathbf{X}=(X_1,X_2,X_3) \in \mathcal{B}$ sono detti punti materiali, mentre i punti $\mathbf{x}=(x_1,x_2,x_3) \in \mathbb{R}^3$ sono detti punti spaziali. 
-Un moto di $\mathcal{B}$ è una famiglia di configurazioni dipendente dal tempo $\phi: \mathcal{B} \times [-T,T] \to R^3$.
-La velocità del punto materiale $\mathbf{X}$ è data da 
-$$\mathbf{V}(\mathbf{X},t) = \frac{\partial \phi}{\partial t}(\mathbf{X},t)$$,
-mentre la velocità del punto spaziale $\mathbf{x}=\phi(\mathbf{X})$ è data da
-$$\mathbf{v}(\mathbf{x},t) = \mathbf{V}(\mathbf{X},t)$$.
-L'accelerazione è data da
-$$\mathbf{A}(\mathbf{X},t) = \frac{\partial^2 \phi}{\partial t^2} = \frac{\partial \mathbf{V}}{\partial t} = \frac{\partial \mathbf{v}}{\partial t}+\mathbf{v}\cdot\Nabla\mathbf{v}$$.
-Più in generale [...].
-\paragraph{Gradiente di deformazione}
-La matrice delle derivate parziali di $\boldsymbol{\phi}$ 
-$$ \mathbf{F} = D\boldsymbol{\phi}$$
-è detta gradiente di deformazione.
-$\boldsymbol{\phi}$ preserva l'orientazione quindi $\mathbf{F} > 0$. 
+La caratteristica dei materiali elastici, a differenza dei fluidi, è quella di tendera a ritornare nella proprio posizione di equilibrio, cioè la configurazione che minimizza una data funzione energia dipendente dalla configurazione e specifica per il materiale, detta configurazione di riferimento o configurazione di equilibrio, che rappresenta lo stato non deformato del materiale. Questa posizione e la traiettoria seguita dai punti del corpo per raggiungerla dipende dalla natura del materiale elastico e in definitiva dalla sua legge costitutiva.
 
-$\mathbf{F}$ può essere decomposto in maniera univoca come 
-$$\mathbf{F}=\mathbf{R}\mathbf{U}=\mathbf{V}\mathbf{R}$$
-dove $\mathbf{R}$ è una matrice ortogonale, e quindi rappresenta una rotazione, mentre $\mathbf{U}$ e $\mathbf{V}$ sono matrici simmetriche definite positive e sono dette rispettivamente tensore di stress destro e sinistro. 
-Inoltre $\mathbf{U}=\sqrt{\mathbf{F}^T\mathbf{F}}$ e $\mathbf{V}=\sqrt{\mathbf{F}\mathbf{F}^T}$.
-Siano $\mathbf{C}=\mathbf{F}^T\mathbf{F}=\mathbf{U}^2$ il tensore destro di Cauchy-Green e $\mathbf{b}=\mathbf{F}\mathbf{F}^T=\mathbf{V}^2$ il tensore sinistro di Cauchy-Green.
-Dato che $\mathbf{U}$ e $\mathbf{V}$ sono simili, simmetriche e definite positive allora hanno gli stessi autovalori $\lambda_1$, $\lambda_2$ e $\lambda_3$ reali e positivi, detti tensioni principali. I rispettivi autovettori sono detti direzioni principali. Il valore di $\lambda_i$ rappresenta lo stiramento nella direzione del rispettivo autovettore.
-\paragraph{Leggi di Conservazione}
-\subparagraph{Conservazione della Massa}
-Sia $\boldsymbol{\phi}(\mathbf{x},t)$ un moto di $\mathcal{B}$ e $\rho(\mathbf{x},t)$ la densità di massa del corpo deformato e $\rho_{\mathcal{B}}(\mathbf{X})$ la densità di massa del corpo non deformato. 
-Sia $\mathcal{U}\in\mathcal{B}$ una porzione del corpo $\mathcal{B}$ e  $\mathcal{U}_t=\boldsymbol{\phi}(\mathcal{U},t)$ la stessa porzione al tempo $t$. Allora 
-$$\int_{\mathcal{U}}\rho_{\mathcal{B}}(\mathbf{X})\, d\mathbf{X} = \int_{\mathcal{U}_t}\rho(\mathbf{x},t)\, d\mathbf{x} = $$
-[...] e quindi
-$$\int_{\mathcal{U}_t}\frac{\partial\rho}{\partial t}(\mathbf{x},t)\, d\mathbf{x} =  -\int_{\partial\mathcal{U}_t} \mathbf{J} \cdot \mathbf{n} \, da$$
-\subparagraph{Conservazione del Momento}
-Sia $\mathbf{b}(\mathbf{x},t)$ la forza applicata al corpo $\mathcal{B}$ per unità di massa, e sia $\boldsymbol{\tau}(\mathbf{x},t)$ la forza di superficie applicata per unità di superficie. La coppia $(\mathbf{b},\boldsymbol{\tau})$ è detto carico applicato al corpo. Sia $\mathbf{t}(\mathbf{x},t,\mathbf{n})$ la forza di stress interna al corpo per unità di area nella direzione $\mathbf{n}$. La seconda legge di Newton diventa quindi
-$$\frac{d}{dt}\int_{\mathcal{U}_t}\rho\mathbf{v}\, d\mathbf{x} = \int_{\partial \mathcal{U}_t}\mathbf{t}\, da + \int_{\mathcal{U}_t}\rho\mathbf{b}\, d\mathbf{x} $$.
-Per il teoreme di Cauchy se vale la legge di conservazione del momento allora $\mathbf{t}$ dipende linearmente da  $\mathbf{n}$, e quindi esiste un tensore $\boldsymbol{\sigma}$ tale che 
-$$\mathbf{t}(\mathbf{x},t,\mathbf{n})= \boldsymbol{\sigma}(\mathbf{x},t)\mathbf{n}$$. Questo tensore è detto tensore degli stress di Cauchy. Sfruttando il teorema della divergenza di ottiene
-$$\frac{d}{dt}\int_{\mathcal{U}_t}\rho\mathbf{v}\, d\mathbf{x} = \int_{\mathcal{U}_t}\Nabla\cdot\boldsymbol{\sigma}+\rho\mathbf{b}\, d\mathbf{x} $$.
-Data l'arbitrarietà di ${\mathcal{U}_t}$ si ottiene l'equazione del moto di Cauchy
-$$\rho\frac{d\mathbf{v}}{dt}=\Nabla\cdot\boldsymbol{\sigma}+\rho\mathbf{b}$$. 
+Anche per i materiali elastici valgono le leggi di conservazione della massa e del momento, e quindi dati [...] per un particolare tensore degli stress $\mathbf{\sigma}$ sarà ancora valida l'equazione del moto di Cauchy
+
+$$
+\rho\frac{d\mathbf{v}}{dt} = \Nabla\cdot \mathbf{\sigma} + \rho\mathbf{b}
+$$
+
 \subparagraph{In coordinate lagrangiane}
-\'E possibile esprimere il tensore di Cauchy in coordinate lagrangiane sfruttando le quantità materiali al posto di quelle spaziali.
-Il primo vettore di stress di Piola-Kirchhoff $\mathbf{T}(\mathbf{X},t,\mathbf{n})$ è un vettore parallelo al vettore di stress di Cauchy $\mathbf{t}(\mathbf{x},t,\mathbf{n})$, ma misura la forza per unità di area non deformata.
-[...]
+\'E possibile esprimere il tensore di Cauchy in coordinate lagrangiane sfruttando le quantità materiali al posto di quelle spaziali, ottenendo così i vettori degli stress di Piola-Kirchhoff.
+Il primo vettore di stress di Piola-Kirchhoff $\mathbf{T}(\mathbf{X},t,\mathbf{n})$ è un vettore parallelo al vettore di stress di Cauchy $\mathbf{t}(\mathbf{x},t,\mathbf{n})$, ma misura la forza per unità di area non deformata,
+cioè $\mathbf{T}\,d\mathbf{A} = \mathbf{t}\,da$.
+Sfruttando l'identità di Piola
+$$
+\Nabla \cdot (J\mathbf{F}^{-1}) = 0
+$$
+cioè
+$$
+\frac{\partial}{\partial X_j}(J\frac{\partial X_j}{\partial x_i}) = 0
+$$
+che si ottiene osservando che $J\mathbf{F}^{-1}$ è la matrice dei cofattori di $\mathbf{F}$ cioè
+$$
+(J\mathbf{F}^{-1})^r_k = \epsilon_{ijk}\epsilon^{pqr}\mathbf{F}^i_p\mathbf{F}^j_q
+$$
+dove $\epsilon$ è il tensore di Levi-Civita.
+
 Sia $\mathbf{P}=J\boldsymbol{\sigma}\mathbf{F}^{-T}$ il primo tensore di Piola-Kirchhoff allora
 $$\frac{d}{dt}\int_{\mathcal{U}}\rho_{\mathcal{B}}\mathbf{V}\, d\mathbf{X} = \int_\mathcal{U}\Nabla\cdot\mathbf{P}+\rho_{\mathcal{B}}\mathbf{B}\, d\mathbf{X} $$.
 Sia $\mathbf{S}=\mathbf{F}^{-1}\mathbf{P}$ il secondo tensore di Piola-Kirchhoff.
@@ -644,64 +731,6 @@ $$\Nabla\cdot\mathbf{v}=0$$
 %Heltai
 
 \section{Teoria dell'elasticità strikes back}
-[coordinate euleriane e lagrangiane]
-
-\paragraph{Il teorema del trasporto}
-
-\begin{theorem}[del Trasporto di Reynolds]
-	Sia $\Phi(\mathbf{x},t)$ una funzione scalare o vettoriale, $\mathcal{P}\subset\mathcal{B}$ una porzione regolare del corpo in esame e  $\mathcal{P}_t = \mathbf{X}(\mathcal{P},t)$ la stessa porzione al tempo $t$ allora
-	$$\forall t \in (0,T)\> \frac{d}{dt}\int_{\mathcal{P}_t}\Phi(\mathbf{x},t)\,d\mathbf{x}=\int_{\mathcal{P}_t}\frac{D\Phi}{Dt}(\mathbf{x},t)+\Phi(\mathbf{x},t)\Nabla\cdot\mathbf{u}(\mathbf{x},t)\,d\mathbf{x}$$
-\end{theorem}
-
-Le equazioni di conservazione possono essere ricavate applicando il teorema del trasporto.
-
-\paragraph{Conservazione del volume}
-Applicando il teorema di Reynolds alla funzione $\Phi \equiv 1$ si ottiene la legge di conservazione del volume
-$$\frac{d}{dt}\int_{\mathcal{P}_t}\,d\mathbf{x}=\int_{\mathcal{P}_t}\Nabla\cdot\mathbf{u}\,d\mathbf{x}=\int_{\partial\mathcal{P}_t}\mathbf{u}\cdot\mathbf{n}\,d\mathbf{x} $$.
-Se il materiale è incomprimibile allora $\Nabla\cdot\mathbf{u}=0$.
-
-\paragraph{Conservazione della massa}
-Sia $M(\mathbf{s})$ la densità di massa del punto materiale $\mathbf{s}$ e 
-$$\rho(\mathbf{x},t)=M(\mathbf{X}(\mathbf{x},t))$$
-la densità di massa in coordinate euleriane.
-Applicando il principio di conservazione della massa si ottiene
-$$\frac{d}{dt}\int_{\mathcal{P}_t}\rho\,d\mathbf{x}=\int_{\mathcal{P}_t}\frac{D\rho}{Dt}+\rho\Nabla\cdot\mathbf{u}\,d\mathbf{x}=0$$.
-Se inoltre il materiale è incomprimibile allora 
-$$\frac{D\rho}{Dt}(\mathbf{x},t)=0 $$.
-e applicando il teorema di Reynold alla funzione $\rho\Phi$ si ottiene
-$$\frac{d}{dt}\int_{\mathcal{P}_t}\rho\Phi\,d\mathbf{x}=\int_{\mathcal{P}_t}\frac{D(\rho\Phi)}{Dt}+\rho\Phi\Nabla\cdot\mathbf{u}\,d\mathbf{x}=\int_{\mathcal{P}_t}(\frac{D\rho}{Dt}+\rho\Nabla\cdot\mathbf{u})\Phi+\rho\frac{D\Phi}{Dt}\,d\mathbf{x}=\int_{\mathcal{P}_t}\rho\frac{D\Phi}{Dt}\,d\mathbf{x}$$.
-Quindi in un materiale incomprimibile la densità di massa si comporta come una costante per quanto riguarda l'operazione di derivazione materiale.
-
-\paragraph{Conservazione della quantità di moto}
-Sia
-$$\mathbf{p}(\mathcal{P},t)=\int_{\mathcal{P}_t}\rho\mathbf{u}\,d\mathbf{x}$$
-la quantità di moto della porzione di corpo $\mathcal{P}$
-e
-$$\mathbf{L}(\mathcal{P},t)=\int_{\mathcal{P}_t}\rho\mathbf{x}\times\mathbf{u}\,d\mathbf{x}$$
-il momento angolare.
-Applicando il teorema di Reynolds si ottiene
-$$\frac{D\mathbf{p}}{Dt}=\int_{\mathcal{P}_t}\rho\frac{D\mathbf{u}}{Dt}\,d\mathbf{x}$$
-$$\frac{D\mathbf{L}}{Dt}=\int_{\mathcal{P}_t}\rho\mathbf{x}\times\frac{D\mathbf{u}}{Dt}\,d\mathbf{x}$$
-Enunciamo ora la prima legge di Newton
-\begin{theorem}
-	Sia $\mathbf{f}(\mathcal{P},t)$ la risultante delle forze applicate alla porzione di corpo $\mathcal{P}$ al tempo $t$ allora
-	$$\mathbf{f}((\mathcal{P},t))=\frac{D\mathbf{p}}{Dt}((\mathcal{P},t))$$
-\end{theorem}
-Si possono distinguere due tipi di forze, le forze di volume che sono applicate ad ogni punto del materiale, e le forze di contatto, responsabili dell'interazione tra sottoinsiemi del materiale.
-Siano $\mathbf{b}(\mathbf{x},t)$ la densità di forze di volume e $\mathbf{t}(\mathbf{x},t,\mathbf{n})$ la densità di forze di contatto. Verrano considerati solo materiali di Cauchy in cui la densità di forza di contatto dipende solo dalla normale alla superficie e non dalla curvatura della stessa.
-La forza applicata da una regione del corpo su di un'altra regione attraverso la superficie $\mathcal{S}$ è data da
-$$\int_{\mathcal{S}}\mathbf{t}(\mathbf{n},\mathbf{x},t)\,da$$.
-La prima legge di Newton per un materiale di Cauchy diventa
-$$\mathbf{f}((\mathcal{P},t))=\frac{D\mathbf{p}}{Dt}((\mathcal{P},t)) = \int_{\partial\mathcal{P}_t}\mathbf{t}+\int_{\mathcal{P}_t}\mathbf{b}$$
-Che è equivalente a chiedere che valga il principio dei lavori virtulali, cioè che per ogni $\mathcal{P}$, $t$ e per ogni $\mathbf{n}$ esista un tensore simmetrico $\boldsymbol{\sigma}$ detto tensore di stress di Cauchy tale che $\mathbf{t}(\mathbf{x},t,mathbf{n})=\boldsymbol{\sigma}(\mathbf{x},t)\mathbf{n}$ e
-$$\int_{\mathcal{P}_t}\frac{D\mathbf{u}}{Dt}\cdot\mathbf{v}\,d\mathbf{x}+\int_{\mathcal{P}_t}\boldsymbol{\sigma}\boldsymbol{:}\Nabla\mathbf{v}\,d\mathbf{x}=\int_{\partial\mathcal{P}_t}\boldsymbol{\sigma}\mathbf{n}\cdot\mathbf{v}\,d\mathbf{x}+\int_{\mathcal{P}_t}\mathbf{b}\cdot\mathbf{v}\,d\mathbf{x}$$
-per ogni funzione di test $\mathbf{v}$ sufficientemente regolare a supporto compatto in $\Omega$.
-[$$\boldsymbol{\sigma}\boldsymbol{:}\Nabla\mathbf{v}=\sigma_{\alpha\beta}\frac{\partial v_{\alpha}}{\partial x_{\beta}}$$].
-Se $\boldsymbol{\sigma}$ è sufficiente regolare allora vale la versione puntuale dell'equazione
-$$\rho\frac{D\mathbf{u}}{Dt}=\Nabla\cdot\boldsymbol{\sigma}+\mathbf{b}$$.
-Si può notare che in dimensione $d=2$ l'equazione fornisce $2$ condizioni per $2(\mathbf{u})+3(\boldsymbol{\sigma})$ incognite, mentre in dimensione $d=3$ l'equazione fornisce $3$ condizioni per $3(\mathbf{u})+6(\boldsymbol{\sigma})$.
-I rimanenti gradi di libertà possono essere utilizzati per modellizzare vari tipi di materiali differenti, ad esempio i fluidi viscosi e i materiali elastici.
-
 
 Un corpo si dice elastico se tende a ritornare nella sua configurazione originale ( o di equilibrio ) dopo essere stato deformato. Le particelle di un corpo elastico tendono a recuperare la loro posizione relativa rispetto alle altre particelle, mentre in un fluido il comportamento è stabilito solo dalla loro velocità relativa.
 
