@@ -1,150 +1,208 @@
 % introduction.tex
-% $$\ps{f}{v}[H][A]$$
 
 \chapter{Principi di Fluidodinamica ed Elasiticità}
 %The Finite Element Immersed Boundary Method, L. Heltai ,Ph.D. Thesis , 2006, capitolo 1 19-35
-La meccanica del continuo studia i corpi, siano essi solidi, liquidi o gassosi, come se il materiale che li compone si comportasse allo stesso modo ad ogni scala per quanto piccola, ignorando gli effetti dovuti alla struttura microscopica/atomica. In questo modo è possibile studiare questi corpi sfuttando gli strumenti del calcolo infinitesimale.
+La meccanica del continuo studia i corpi, siano essi solidi, liquidi o gassosi, come se il materiale che li compone si comportasse allo stesso modo ad ogni scala per quanto piccola, ignorando gli effetti dovuti alla struttura microscopica e alla natura atomica del materiale. In questo modo è possibile studiare questi corpi sfuttando gli strumenti del calcolo infinitesimale.
 
 Le equazione che governano il comportamento dei corpi possono essere distinte in leggi di conservazione, che sono principi fisici generali, e da leggi costitutive che rappresentano il comportamento dello specifico materiale e variano da materiale a materiale e regolano la risposta alla deformazione.
 
-\section{Le coordinate euleriane e le coordinate lagrangiane, configurazione di riferimento e deformazione}
+\section{Introduzione}
 %The Finite Element Immersed Boundary Method, L. Heltai ,Ph.D. Thesis , 2006, capitolo 1 19-35
-Sia $\Omega \subset \mathbb{R}^{2,3}$ una regione dello spazio contenente un corpo continuo, allora $\mathbf{x} \in \Omega$ è un punto in coordinate euleriane e rappresenta un punto fisso nello spazio, detto punto spaziale o coordinata euleriana. 
-Sia $\omega \subset \mathbb{R}^{2,3}$ la configurazione di riferimento del corpo in esame, allora $\mathbf{s} \in \omega$ è un punto in coordinate lagrangiane e rappresenta un punto ben definito del corpo che si muove nello spazio, detto punto materiale o coordinata lagrangiana.
+%Mathematical Foundations of Elasticity, J.E. Mardsen, T.J.R. Hughes, 1994, Chapter "A POINT OF DEPARTURE"
+Sia $\Omega \subset \mathbb{R}^{n}$ con $n=1,2,3$ una porzione dello spazio contenente un corpo continuo. Il punto $\mathbf{x}=(x_1,\dots,x_n) \in \Omega$ è detto punto spaziale e rappresenta un punto fisso nello spazio, e le sue componenti sono dette coordinate euleriane.
+Sia $\mathcal{B} \subset \mathbb{R}^{d}$ con $d=1,2,3$ e $d\leq n$ la chiusura di un aperto con bordo a tratti liscio. $\mathcal{B}$ è detta configurazione di riferimento del corpo in esame. Il punto $\mathbf{s}=(s_1,\dots,s_d) \in \mathcal{B}$ è detto punto materiale e rappresenta un punto ben definito del corpo che si muove nello spazio, e le sue componenti sono dette coordinate lagrangiane. Una configurazione o deformazione di $\mathcal{B}$ è una mappa $\phi: \mathcal{B} \to \mathbb{R}^{n}$ sufficientemente liscia, che preserva l'orientamento e invertibile. 
+
 La relazione tra i due sistemi di rifemento è data dalle funzioni
 \begin{equation*}  
-\mathbf{X}:\omega \times [0,T] \to \Omega
+\phi:\mathcal{B} \times [0,T] \to \Omega
 \end{equation*}
 \begin{equation*}  
-\mathbf{q}:\Omega \times [0,T] \to \omega
+\mathbf{q}:\Omega \times [0,T] \to \mathcal{B}
 \end{equation*}
-
-Osserviamo che $\mathbf{X}(\mathbf{s},t)$ rappresenta la traiettoria del punto materiale $\mathbf{s}$.
-
-Osserviamo inoltre che valgono le seguenti uguaglianze
+per cui valgono le seguenti uguaglianze
 \begin{equation*}  
-\mathbf{x} = \mathbf{X}(\mathbf{q}(\mathbf{x},t),t)
+\mathbf{x} = \phi(\mathbf{q}(\mathbf{x},t),t)
 \end{equation*}
 \begin{equation*}  
-\mathbf{s} = \mathbf{q}(\mathbf{X}(\mathbf{s},t),t)
+\mathbf{s} = \mathbf{q}(\phi(\mathbf{s},t),t)
 \end{equation*}
-e assumiamo che per ogni istante $t$ le due funzioni $\mathbf{X}$ e $\mathbf{q}$ siano inveribili e lipshitziane.
+Assumiamo che per ogni istante $t\in [0,T]$ le due funzioni $\mathbf{q}$ e $\phi$ siano invertibili e lipschitziane.
 
-Definiamo il gradiente di deformazione $\mathbb{F}$ come
+Osserviamo che $\phi(\mathbf{s},t)$ rappresenta la traiettoria nello spazio del punto materiale $\mathbf{s}$.
+
+La matrice delle derivate parziali di $\phi$ 
+\begin{equation*}
+\mathbb{F} = D\phi
+\end{equation*}
+cioè
 \begin{equation*}  
-\mathbb{F}_{\alpha i} = (\Nabla_{s}\mathbf{X}(\mathbf{s},t))_{\alpha i} = \frac{\partial X_{\alpha}(\mathbf{s},t)}{\partial s_{i}}
+\mathbb{F}_{\alpha i} = (\Nabla_{s}\phi(\mathbf{s},t))_{\alpha i} = \frac{\partial \phi_{\alpha}(\mathbf{s},t)}{\partial s_{i}}
+\end{equation*}
+è detta gradiente di deformazione.
+
+L'ipotesi che $\phi$ sia invertibile implica che $\mathbb{F}$ abbia determinante diverso da zero e quindi assumendo che, a meno di cambiamenti dell'ordine delle coordinate, $\vert\mathbb{F}\vert$ sia positivo al tempo $t=0$, questi rimarrà positivo per ogni tempo $t>0$.
+
+La mappa $\phi$ preserva l'orientamento quindi $\mathbb{F}>0$. 
+
+Il valore di $|\mathbb{F}|$ rappresenta il rapporto tra la misura della regione attorno al punto $\mathbf{s}$ nel riferimento lagrangiano e la misura della regione attorno al punto $\mathbf{x} = \phi(\mathbf{s},t)$ nel riferimento euleriano.
+
+Il gradiente di deformazione $\mathbb{F}$ può essere decomposto in maniera univoca come 
+\begin{equation*}
+\mathbb{F}=\mathbb{R}\mathbb{U}=\mathbb{V}\mathbb{R}
+\end{equation*}
+dove $\mathbb{R}$ è una matrice ortogonale, e quindi rappresenta una rotazione, mentre $\mathbb{U}$ e $\mathbb{V}$ sono matrici simmetriche definite positive e sono dette rispettivamente tensore di stress destro e tensore di stress sinistro. 
+Osserviamo noltre che 
+\begin{equation*}
+\mathbb{U}=\sqrt{\mathbb{F}^T\mathbb{F}}
+\end{equation*}
+e
+\begin{equation*}
+\mathbb{V}=\sqrt{\mathbb{F}\mathbb{F}^T}
 \end{equation*}
 
-L'ipotesi che $\mathbf{X}$ sia invertibile implica che $\mathbb{F}$ abbia determinante diverso da zero e quindi assumendo che, a meno di cambiamento di coordinate, sia positivo al tempo $t=0$ rimarrà positivo per ogni tempo $t>0$.
+Siano
+\begin{equation*}
+\mathbb{C}=\mathbb{F}^T\mathbb{F}=\mathbb{U}^2
+\end{equation*}
+il tensore destro di Cauchy-Green e
+\begin{equation*}
+\mathbf{b}=\mathbb{F}\mathbb{F}^T=\mathbb{V}^2
+\end{equation*}
+il tensore sinistro di Cauchy-Green.
+Dato che $\mathbb{U}$ e $\mathbb{V}$ sono simili, simmetriche e definite positive allora hanno gli stessi autovalori $\lambda_1,\dots,\lambda_{d}$ reali e positivi, detti tensioni principali. I rispettivi autovettori sono detti direzioni principali. Il valore di $\lambda_i$ rappresenta lo stiramento nella direzione del rispettivo autovettore.
 
-Il valore di $|\mathbb{F}|$ rappresenta il rapporto tra la misura della regione attorno al punto $\mathbf{s}$ e la misura della regione attorno al punto $\mathbf{X}(\mathbf{s},t)$.
-
-Osserviamo che la derivata temporale di grandezze espresse nei diversi sistemi di riferimento rappresenta, a seconda del sistema di riferimento, situazioni diverse.
+Osserviamo che la derivata temporale di grandezze espresse nei diversi sistemi di riferimento possiede, a seconda del sistema di riferimento, interpretazioni diverse.
 Nel caso del riferimento lagrangiano rappresenta la variazione di una quantità fisica nel punto in esame, nel caso del riferimento euleriano non ha un'interpretazione fisica diretta perchè oltre alla variazione della grandezza bisogna anche considerare le variazioni indotte dal moto del corpo.
 
-Sia $\Phi(\mathbf{x},t)$ una grandezza espresse in coordinate euleriane, allora
+Sia $\Psi(\mathbf{x},t)$ una grandezza espresse in coordinate euleriane, allora
 
-$$
-\frac{d\Phi(\mathbf{x},t)}{dt} = \frac{\partial \Phi(\mathbf{X}(\mathbf{s},t))}{\partial t} = 
-$$
+\begin{multline*}
+\frac{d\Psi(\mathbf{x},t)}{dt} = \\
+\frac{\partial \Psi(\phi(\mathbf{s},t))}{\partial t} = 
+\frac{\partial \Psi(\mathbf{x},t)}{\partial t} + \frac{\partial\phi(\mathbf{s},t)}{\partial t}\vert_{\mathbf{s} = \mathbf{q}(\mathbf{x},t)}
+\cdot \Nabla\Psi(\mathbf{x},t) = \\
+\frac{\partial \Psi(\mathbf{x},t)}{\partial t} + \mathbf{u}(\mathbf{x},t)\cdot \Nabla\Psi(\mathbf{x},t)
+\end{multline*}
 
-$$
-\frac{\partial \Phi(\mathbf{x},t)}{\partial t} + \frac{\partial\mathbf{X}(\mathbf{s},t)}{\partial t}|_{\mathbf{s} = 
-\mathbf{q}(\mathbf{x},t)}\cdot \Nabla\Phi(\mathbf{x},t) =
-$$
-
-$$
-\frac{\partial \Phi(\mathbf{x},t)}{\partial t} +
-\mathbf{u}(\mathbf{x},t)\cdot \Nabla\Phi(\mathbf{x},t)
-$$
-
-dove $\mathbf{u}(\mathbf{x},t) = \frac{\partial\mathbf{X}(\mathbf{s},t)}{\partial t}|_{\mathbf{s} = \mathbf{q}(\mathbf{x},t)}$
+dove 
+\begin{equation*}
+\mathbf{u}(\mathbf{x},t) = \frac{\partial\phi(\mathbf{s},t)}{\partial t}|_{\mathbf{s} = \mathbf{q}(\mathbf{x},t)}
+\end{equation*}
 è la velocità della particella del corpo che al tempo $t$ si trova nella posizione $\mathbf{x}$.
 
-$\frac{D\Phi}{Dt} = \frac{d\Phi}{dt}$ è detta derivata materiale e esplicita come nella variazione di una quantità in coordinate euleriane bisogna considerare anche la variazione dovuta al moto del corpo.
+L'operatore
+\begin{equation*}
+\frac{D\Psi}{Dt} = \frac{\partial\Psi}{\partial t} + \mathbf{u}\cdot\Nabla\Psi
+\end{equation*}
+è detto derivata materiale e rendo esplicito come nella variazione nel tempo di una grandezza espressa in coordinate euleriane bisogna considerare anche le variazioni dovute al moto del corpo.
+
+Un moto di $\mathcal{B}$ è una famiglia di configurazioni dipendente dal tempo
+\begin{equation*}
+\phi: \mathcal{B} \times [0,T] \to R^{n}
+\end{equation*}
+La velocità del punto materiale $\mathbf{s}$ è data da
+\begin{equation*}
+\mathbf{V}(\mathbf{s},t) = \frac{\partial \phi}{\partial t}(\mathbf{s},t)
+\end{equation*}
+mentre la velocità del punto spaziale $\mathbf{x}=\phi(\mathbf{s},t)$ è data da
+\begin{equation*}
+\mathbf{v}(\mathbf{x},t) = \mathbf{V}(\mathbf{s},t)
+\end{equation*}
+L'accelerazione è data da
+\begin{multline*}
+\mathbf{A}(\mathbf{s},t) = \frac{\partial^2 \phi}{\partial t^2}(\mathbf{s},t) = \frac{\partial \mathbf{V}}{\partial t}(\mathbf{s},t) = \\ \frac{\partial \mathbf{v}}{\partial t}(\phi(\mathbf{s},t),t)+\mathbf{v}(\phi(\mathbf{s},t),t)\cdot\Nabla\mathbf{v}(\phi(\mathbf{s},t),t)
+\end{multline*}
+Più in generale se $Q$ è una grandezza materiale e $q$ la relativa grandezza spaziale allora
+\begin{equation*}
+\frac{\partial Q}{\partial t} = \frac{\partial q}{\partial t} + \mathbf{u}\cdot\Nabla q = \frac{Dq}{Dt}
+\end{equation*}
 
 \subsection{Il teorema del trasporto}
 
 Il teorema del trasporto di Reynolds permette di studiare l'evoluzione delle quantità fisiche di una regione di corpo in movimento.
 
-\begin{theorem}
-Dato un campo scalare o vettoriale $\Phi(\mathbf{x},t)$ e una regione regolare di materiale $\mathcal{P}\in\omega$, sia $\mathcal{P}_{t} = \mathbf{X}(\mathcal{P},t)$ la stessa regione in coordinate euleriane al tempo $t$ allora per ogni $t\in ]0,T[$ vale:
-\begin{equation}
-\frac{d}{dt}\int_{\mathcal{P}_{t}}\Phi(\mathbf{x},t)\,d\mathbf{x} = \int_{\mathcal{P}_{t}}(\frac{D\Phi(\mathbf{x},t)}{Dt}+\Phi(\mathbf{x},t)\Nabla\cdot\mathbf{u}(\mathbf{x},t))\,d\mathbf{x}
-= \int_{\mathcal{P}_{t}}\frac{\partial\Phi(\mathbf{x},t)}{\partial t}+ \int_{\partial\mathcal{P}_{t}}\Phi(\mathbf{x},t)\mathbf{u}(\mathbf{x},t)\cdot\mathbf{n}\,d\mathbf{x}
-\end{equation}
+\begin{theorem}[del Trasporto di Reynolds]
+Dato un campo scalare o vettoriale $\Psi(\mathbf{x},t)$ e una regione regolare di materiale $\mathcal{P}\subset\mathcal{B}$, sia $\mathcal{P}_{t} = \phi(\mathcal{P},t)$ la stessa regione in coordinate euleriane al tempo $t$ allora per ogni $t\in (0,T)$ vale:
+\begin{multline}
+\frac{d}{dt}\int_{\mathcal{P}_{t}}\Psi(\mathbf{x},t)\,d\mathbf{x} =
+ \int_{\mathcal{P}_{t}}\left(\frac{D\Psi(\mathbf{x},t)}{Dt}+\Psi(\mathbf{x},t)\Nabla\cdot\mathbf{u}(\mathbf{x},t)\right)\,d\mathbf{x} = \\
+\int_{\mathcal{P}_{t}}\frac{\partial\Psi(\mathbf{x},t)}{\partial t}\,d\mathbf{x}+ \int_{\partial\mathcal{P}_{t}}\Psi(\mathbf{x},t)\mathbf{u}(\mathbf{x},t)\cdot\mathbf{n}\,d\mathbf{a}
+\end{multline}
 \end{theorem}
 \begin{lemma}
-Sia $J(\mathbf{x},t)=|\mathbb{F}|(\mathbf{x},t)$ allora
+Sia $J(\mathbf{x},t)=|\mathbb{F}|(\mathbf{x},t)$ il determinante del gradiente di deformazione allora
 \begin{equation}
-\frac{\partial}{\partial t}J = J (\Nabla \cdot \mathbf{u} )
+\frac{\partial}{\partial t}J = (\Nabla \cdot \mathbf{u})J
 \end{equation}
 \end{lemma}
 \begin{proof}
 Osserviamo che 
 \begin{equation}
-\frac{\partial}{\partial t}\mathbf{X}(\mathbf{x},t) = \mathbf{u}(\mathbf{X}(\mathbf{x},t))
+\frac{\partial}{\partial t}\phi(\mathbf{x},t) = \mathbf{u}(\phi(\mathbf{x},t))
 \end{equation}
-Per le proprietà del determinante si ha che
-\begin{equation}
-\frac{\partial}{\partial t}J = ...
-\end{equation}
-e quindi
-\begin{equation}
-\frac{\partial}{\partial t}\frac{\partial J_x}{\partial x} =
-\frac{\partial}{\partial x}\frac{\partial J_x}{\partial t} = 
-\frac{\partial}{\partial x}u(\mathbf{x},t)
-\end{equation}
-e 
-\begin{equation}
+Scriviamo esplicitamente le componenti di $\phi$ come
+\begin{equation*}
+\phi(\mathbf{s},t)=(\chi(\mathbf{s},t),\eta(\mathbf{s},t),\xi(\mathbf{s},t))
+\end{equation*}
+e le componenti di $\mathbf{u}$ come
+\begin{equation*}
+\mathbf{u}(\mathbf{x},t)=(u(\mathbf{x},t),v(\mathbf{s},t),w(\mathbf{s},t))
+\end{equation*}
+Sfruttando la proprietà per cui il determinante è multilineare per righe e per colonne si può differenziare ottenedo che
+\begin{multline*}
+\frac{\partial}{\partial t}J = \\
+\begin{vmatrix}
+\frac{\partial}{\partial t}\frac{\partial \chi}{\partial s_1} & \frac{\partial \eta}{\partial s_1} & \frac{\partial \xi}{\partial s_1} \\
+\frac{\partial}{\partial t}\frac{\partial \chi}{\partial s_2} & \frac{\partial \eta}{\partial s_2} & \frac{\partial \xi}{\partial s_2} \\
+\frac{\partial}{\partial t}\frac{\partial \chi}{\partial s_3} & \frac{\partial \eta}{\partial s_3} & \frac{\partial \xi}{\partial s_3} \\
+\end{vmatrix}
++
+\begin{vmatrix}
+\frac{\partial \chi}{\partial s_1} & \frac{\partial}{\partial t}\frac{\partial \eta}{\partial s_1} & \frac{\partial \xi}{\partial s_1} \\
+\frac{\partial \chi}{\partial s_2} & \frac{\partial}{\partial t}\frac{\partial \eta}{\partial s_2} & \frac{\partial \xi}{\partial s_2} \\
+\frac{\partial \chi}{\partial s_3} & \frac{\partial}{\partial t}\frac{\partial \eta}{\partial s_3} & \frac{\partial \xi}{\partial s_3} \\
+\end{vmatrix}
++
+\begin{vmatrix}
+\frac{\partial \chi}{\partial s_1} & \frac{\partial \eta}{\partial s_1} & \frac{\partial}{\partial t}\frac{\partial \xi}{\partial s_1} \\
+\frac{\partial \chi}{\partial s_2} & \frac{\partial \eta}{\partial s_2} & \frac{\partial}{\partial t}\frac{\partial \xi}{\partial s_2} \\
+\frac{\partial \chi}{\partial s_3} & \frac{\partial \eta}{\partial s_3} & \frac{\partial}{\partial t}\frac{\partial \xi}{\partial s_3} \\
+\end{vmatrix}
+\end{multline*}
+Osservato che
+\begin{multline*}
+\frac{\partial}{\partial t}\frac{\partial \chi}{\partial s_1}(\mathbf{s},t) =
+\frac{\partial}{\partial s_1}\frac{\partial \chi}{\partial t}(\mathbf{s},t) = 
+\frac{\partial}{\partial s_1}u(\phi(\mathbf{s},t)),t) = \\ 
+\frac{\partial u}{\partial \chi}(\mathbf{x},t)\frac{\partial\chi}{\partial s_1}(\mathbf{s},t)
++ \frac{\partial u}{\partial \eta}(\mathbf{x},t)\frac{\partial\eta}{\partial s_2}(\mathbf{s},t)
++ \frac{\partial u}{\partial \xi}(\mathbf{x},t)\frac{\partial\xi}{\partial s_3}(\mathbf{s},t)
+\end{multline*}
+e ricordando che
+\begin{equation*}%[Formula di Voss-Weyl]
+\Nabla\cdot\mathbf{u} = \sum_{i=1}^{3}{\frac{1}{J}\frac{\partial(Ju_i) }{\partial s_i}}
+\end{equation*}
+sostituendo nell'equazione precedente si ottiene
+\begin{equation*}
 \frac{\partial u}{\partial x} J + \frac{\partial u}{\partial y} J +\frac{\partial u}{\partial z} J = (\Nabla \cdot \mathbf{u}) J
-\end{equation}
+\end{equation*}
 \end{proof}
 \begin{proof}[Dimostrazione (Teorema del trasporto)]
-Sfruttando il lemma, effettuendo un cambiamento di variabile e differenziando sotto il segno di integrale, osservato che $J$ rappresenta il fattore introdotto dal cambio di variabile e che il dominio di integrazione non dipende più da $t$ si ottiene la tesi.
+Effettuando un cambiamento di variabile per passare dal riferimento euleriano a lagrangiano, differenziando poi sotto il segno di integrale ora che il dominio di integrazione non dipende più da $t$ e sfruttando il lemma, osservato che $J$ rappresenta proprio il fattore introdotto dal cambio di variabile, si ottiene la tesi.
+\begin{multline*}
+\frac{d}{dt}\int_{\mathcal{P}_{t}}\Psi(\mathbf{x},t)\,d\mathbf{x} =
+\frac{d}{dt}\int_{\mathcal{P}}\Psi(\phi(\mathbf{s},t),t)J(\mathbf{s},t)\,d\mathbf{s} = \\
+\int_{\mathcal{P}}\left(\frac{d\Psi(\phi(\mathbf{s},t),t)}{d t}J(\mathbf{s},t)+\frac{\partial  J(\mathbf{s},t)}{\partial t}\Psi(\phi(\mathbf{s},t),t)\right)\,d\mathbf{s} = \\
+\int_{\mathcal{P}}\left(\frac{\partial\Psi(\phi(\mathbf{s},t),t)}{\partial t}J(\mathbf{s},t)+\Nabla\cdot\mathbf{u}(\phi(\mathbf{s},t),t)\Psi(\phi(\mathbf{s},t),t) J(\mathbf{s},t)\right)\,d\mathbf{s} = \\
+\int_{\mathcal{P}_t}\left(\frac{D\Psi(\mathbf{x},t)}{D t}+\Nabla\cdot\mathbf{u}(\mathbf{x},t))\Psi(\mathbf{x},t)\right)\,d\mathbf{x} 
+\end{multline*}
 \end{proof}
 
-A partire dal lemma si può ricavare un espressione in coordinate euleriane del vincolo di incomprimibilità
+Come vedremo nella sezione successiva è possibile ricavare le equazioni che descrivono le leggi di conservazione applicando il teorema del trasporto, ad esempio la conservazione del volume si può scrivere come
 \begin{equation}
-0 = \frac{d}{dt}\text{volume}(\mathcal{W}_t) = \frac{d}{dt}\int_{\mathcal{W}_t}\,dV = \int_{\mathcal{W}_t} \Nabla \cdot \mathbf{u}\,dV
+0 = \frac{d}{dt}\int_{\mathcal{W}_t}\,dV = \int_{\mathcal{W}_t} \Nabla \cdot \mathbf{u}\,dV
 \end{equation}
-e questo implica che $\Nabla \cdot \mathbf{u} = 0$
-
-%HELTAI
-\paragraph{Il teorema del trasporto}
-
-\begin{theorem}[del Trasporto di Reynolds]
-	Sia $\Phi(\mathbf{x},t)$ una funzione scalare o vettoriale, $\mathcal{P}\subset\mathcal{B}$ una porzione regolare del corpo in esame e  $\mathcal{P}_t = \mathbf{X}(\mathcal{P},t)$ la stessa porzione al tempo $t$ allora
-	$$\forall t \in (0,T)\> \frac{d}{dt}\int_{\mathcal{P}_t}\Phi(\mathbf{x},t)\,d\mathbf{x}=\int_{\mathcal{P}_t}\frac{D\Phi}{Dt}(\mathbf{x},t)+\Phi(\mathbf{x},t)\Nabla\cdot\mathbf{u}(\mathbf{x},t)\,d\mathbf{x}$$
-\end{theorem}
-
-%Mersden Mathematical Foundation of Elasticity
-Sia $\mathcal{B} \in \mathbb{R}^3$ la chiusura di un aperto con bordo a tratti liscio. $\mathcal{B}$ è detta configurazione di riferimento del corpo in esame.
-Una configurazione o deformazione di $\mathcal{B}$ è una mappa $\phi: \mathcal{B} \to \mathbb{R}^3$ sufficientemente liscia, che preserva l'orientamento e invertibile. I punti $\mathbf{X}=(X_1,X_2,X_3) \in \mathcal{B}$ sono detti punti materiali, mentre i punti $\mathbf{x}=(x_1,x_2,x_3) \in \mathbb{R}^3$ sono detti punti spaziali. 
-Un moto di $\mathcal{B}$ è una famiglia di configurazioni dipendente dal tempo $\phi: \mathcal{B} \times [-T,T] \to R^3$.
-La velocità del punto materiale $\mathbf{X}$ è data da 
-$$\mathbf{V}(\mathbf{X},t) = \frac{\partial \phi}{\partial t}(\mathbf{X},t)$$,
-mentre la velocità del punto spaziale $\mathbf{x}=\phi(\mathbf{X})$ è data da
-$$\mathbf{v}(\mathbf{x},t) = \mathbf{V}(\mathbf{X},t)$$.
-L'accelerazione è data da
-$$\mathbf{A}(\mathbf{X},t) = \frac{\partial^2 \phi}{\partial t^2} = \frac{\partial \mathbf{V}}{\partial t} = \frac{\partial \mathbf{v}}{\partial t}+\mathbf{v}\cdot\Nabla\mathbf{v}$$.
-Più in generale se $Q$ è una grandezza materiale e $q$ la relativa grandezza spaziale allora 
-$$
-\frac{\partial Q}{\partial t} = \frac{\partial q}{\partial t} + \mathbf{u}\cdot\Nabla q = \frac{Dq}{Dt}
-$$.
-
-\paragraph{Gradiente di deformazione}
-La matrice delle derivate parziali di $\boldsymbol{\phi}$ 
-$$ \mathbf{F} = D\boldsymbol{\phi}$$
-è detta gradiente di deformazione.
-$\boldsymbol{\phi}$ preserva l'orientazione quindi $\mathbf{F} > 0$. 
-
-$\mathbf{F}$ può essere decomposto in maniera univoca come 
-$$\mathbf{F}=\mathbf{R}\mathbf{U}=\mathbf{V}\mathbf{R}$$
-dove $\mathbf{R}$ è una matrice ortogonale, e quindi rappresenta una rotazione, mentre $\mathbf{U}$ e $\mathbf{V}$ sono matrici simmetriche definite positive e sono dette rispettivamente tensore di stress destro e sinistro. 
-Inoltre $\mathbf{U}=\sqrt{\mathbf{F}^T\mathbf{F}}$ e $\mathbf{V}=\sqrt{\mathbf{F}\mathbf{F}^T}$.
-Siano $\mathbf{C}=\mathbf{F}^T\mathbf{F}=\mathbf{U}^2$ il tensore destro di Cauchy-Green e $\mathbf{b}=\mathbf{F}\mathbf{F}^T=\mathbf{V}^2$ il tensore sinistro di Cauchy-Green.
-Dato che $\mathbf{U}$ e $\mathbf{V}$ sono simili, simmetriche e definite positive allora hanno gli stessi autovalori $\lambda_1$, $\lambda_2$ e $\lambda_3$ reali e positivi, detti tensioni principali. I rispettivi autovettori sono detti direzioni principali. Il valore di $\lambda_i$ rappresenta lo stiramento nella direzione del rispettivo autovettore.
+e, dato che deve valere per ogni $t$ e per ogni $\mathcal{W}_t$, questo implica che $\Nabla \cdot \mathbf{u} = 0$
 
 \section{Cenni di Fluidodinamica}
 
@@ -153,7 +211,11 @@ La fluidodinamica studia e descrive il movimento dei fluidi. Le equazioni che go
 
 \subsection{Le equazioni di Eulero}
 
-Sia $\mathcal{D} \subseteq \mathbb{R}^{2,3}$ una porzione di spazio contenente un fluido, $\mathbf{x} \in \mathcal{D}$ un punto del fluido in coordinate euleriane, $\mathbf{u}(\mathbf{x},t)$ la velocità del fluido nel punto $\mathbf{x}$ al tempo $t$. Per ogni tempo $t$, $\mathbf{u}$ è un campo vettoriale su $\mathcal{D}$ ed è detto campo delle velocità del fluido. Sia $\rho(\mathbf{x},t)$ la densità del fluido nel punto $\mathbf{x}$ al tempo $t$.  L'esistenza di $\rho$ è detta ipotesi del continuo ed equivale a considerare il corpo come un oggetto senza soluzione di continuità trascurando la natura molecolare del fluido. Questa ipotesi rimane accettabile fintanto che si studiano i fenomeni macroscopici che avvengono nel fluido. Sia $\mathcal{W} \subseteq \mathcal{D}$ una parte dello spazio occupato dal fluido e $m(\mathcal{W},t)= \int_{\mathcal{W}}\rho(\mathbf{x},t) \, dV$ la massa del fluido contenuto in $\mathcal{W}$ al tempo $t$. Si supponga sempre inoltre che le funzioni usate abbiano sufficiente regolarità per dare senso alle espressioni scritte. 
+Sia $\mathcal{D} \subseteq \mathbb{R}^{2,3}$ una porzione di spazio contenente un fluido, $\mathbf{x} \in \mathcal{D}$ un punto del fluido in coordinate euleriane, $\mathbf{u}(\mathbf{x},t)$ la velocità del fluido nel punto $\mathbf{x}$ al tempo $t$. Per ogni tempo $t$, $\mathbf{u}$ è un campo vettoriale su $\mathcal{D}$ ed è detto campo delle velocità del fluido. Sia $\rho(\mathbf{x},t)$ la densità del fluido nel punto $\mathbf{x}$ al tempo $t$.  L'esistenza di $\rho$ è detta ipotesi del continuo ed equivale a considerare il corpo come un oggetto senza soluzione di continuità trascurando la natura molecolare del fluido. Questa ipotesi rimane accettabile fintanto che si studiano i fenomeni macroscopici che avvengono nel fluido. Sia $\mathcal{W} \subseteq \mathcal{D}$ una parte dello spazio occupato dal fluido e
+\begin{equation*}
+m(\mathcal{W},t)= \int_{\mathcal{W}}\rho(\mathbf{x},t) \, dV
+\end{equation*}
+la massa del fluido contenuto in $\mathcal{W}$ al tempo $t$. Si supponga sempre inoltre che le funzioni usate abbiano sufficiente regolarità per dare senso alle espressioni scritte. 
 
 Le equazioni di Eulero sono ricavate a partire del principio di conservazione della massa (\emph{la massa non si crea e non si distrugge}), del momento (\emph{seconda legge di Newton}) e dell'energia (\emph{l'energia non si crea e non si distrugge}).
 
@@ -166,7 +228,7 @@ Nell'ipotesi che la massa del fluido si conservi è necessario che le uniche var
                               &= - \int_{\partial \mathcal{W}}\rho(\mathbf{x},t) \mathbf{u}(\mathbf{x},t) \cdot \mathbf{n}(\mathbf{x}) \, dV
 \end{split}
 \end{equation*}
-che grazie al teorema della divergenza diventa
+che, applicando il teorema della divergenza al secondo membro, diventa
 \begin{equation*}
 \int_{\mathcal{W}}\frac{\partial}{\partial t}\rho(\mathbf{x},t) \, dV = -\int_{\mathcal{W}}\Nabla \cdot \left (\rho(\mathbf{x},t) \mathbf{u}(\mathbf{x},t) \right ) \, dV
 \end{equation*}
@@ -187,34 +249,53 @@ Dovendo essere vera per ogni $\mathcal{W}$ l'equazione \ref{eq:conservazione mas
 Questa è la forma differenziale della legge di conservazione della massa, altrimenti detta equazione di continuità.
 
 Lo stesso risultato si può ottenere applicando il teorema del trasporto
-\begin{equation}
-0 = \frac{d}{dt}\int_{\mathcal{W}_t}\rho\,dV = \int_{\mathcal{W}_t}(\frac{D\rho}{dt}+\rho(\Nabla\cdot\mathbf{u}))\,dV
-\end{equation}
-
+\begin{multline*}
+0 = \frac{d}{dt}\int_{\mathcal{W}_t}\rho\,dV = \int_{\mathcal{W}_t}\left(\frac{D\rho}{D t}+\rho(\Nabla\cdot\mathbf{u})\right)\,dV = \\
+\int_{\mathcal{W}_t}\left(\frac{\partial\rho}{\partial t}+\mathbf{u}\cdot\Nabla\rho+\rho(\Nabla\cdot\mathbf{u})\right)\,dV = 
+\int_{\mathcal{W}_t}\left(\frac{\partial\rho}{\partial t}+\Nabla(\rho\mathbf{u})\right)\,dV = 
+\end{multline*}
 
 \paragraph{La conservazione del momento}
-Sia $\mathbf{x}(t) = (x(t),y(t),z(t))$ la traiettoria seguita da una particella del fluido e $\mathbf{u}(t) = (\dot{x}(t),\dot{y}(t),\dot{z}(t)) = \mathbf{u}(\mathbf{x}(t)) = \frac{d\mathbf{x}}{dt}(t)$ la sua velocità allora l'accelerazione della particella sarà data da
+Sia
+\begin{equation*}
+\mathbf{x}(t) = (x(t),y(t),z(t))
+\end{equation*}
+la traiettoria seguita da una particella del fluido e
+\begin{equation*}
+\mathbf{u}(t) = (\dot{x}(t),\dot{y}(t),\dot{z}(t)) = \mathbf{u}(\mathbf{x}(t)) = \frac{d\mathbf{x}}{dt}(t)
+\end{equation*}
+la sua velocità allora l'accelerazione della particella sarà data da
 \begin{equation*} 
 \mathbf{a}(\mathbf{x}(t)) = \frac{d^2\mathbf{x}}{dt^2} (t) = \frac{\partial  \mathbf{u}}{\partial x}\dot{x} + \frac{\partial  \mathbf{u}}{\partial y}\dot{y} + \frac{\partial  \mathbf{u}}{\partial z}\dot{z} + \frac{\partial \mathbf{u}}{\partial t}
 = \nabla  \mathbf{u} \cdot  \mathbf{u} + \frac{\partial \mathbf{u}}{\partial t} = \frac{D \mathbf{u}}{Dt}
 \end{equation*}
-dove $\frac{D}{Dt}=\partial_t + \mathbf{u}\cdot\Nabla$ è detta derivata materiale [...].
-Lo stesso ragionamento è applicabile a ogni funzione $f=f(x(t),y(t),z(t),t)$ scalare o vettoriale
+
+Le forze che agiscono su di un corpo continuo possono essere di due soli tipi: le forze di stress e le forze esterne o esogene. Le forze di stress sono le forze applicate su una superficie interna al corpo dal resto del corpo. Le forze esterne sono invece forze applicate per unità di volume da agenti esterni al corpo, come il campo gravitazionale o il campo magnetico. Un fluido si dice ideale se esiste una funzione $p(\mathbf{x},t)$ detta pressione per cui le forze di stress sono del tipo
 \begin{equation*}
-\frac{df}{dt}=\partial_tf+\mathbf{u}\cdot\Nabla f = \frac{Df}{Dt}
+\mathbf{F}\,dA = p(\mathbf{x},t)\mathbf{n}
+\end{equation*}
+cioè sono forze normali alla superficie. In particolare l'assenza di componenti tangenziali delle forze di stress impedisce l'instaurarsi o il cessare di movimenti rotatori nel fluido.
+
+Sia $\mathcal{W}$ una regione del fluido, allora la forza di stress applicata su $\mathcal{W}$ dal resto del corpo è data da
+\begin{equation*}
+\mathbf{S}_{\partial\mathcal{W}} = - \int_{\partial\mathcal{W}} p\mathbf{n}\,dA
+\end{equation*}
+Scelta una direzione $\mathbf{e}$ applicando il teorema della divergenza si ottiene
+\begin{equation*}
+\mathbf{e}\cdot\mathbf{S}_{\partial\mathcal{W}} = - \int_{\partial\mathcal{W}} p\mathbf{e}\cdot\mathbf{n}\,dA
+                                                  = - \int_{\mathcal{W}} \nabla p \cdot \mathbf{e} \, dV
+\end{equation*}
+e quindi, data l'arbitrarietà di $\mathbf{e}$
+\begin{equation*}
+\mathbf{S}_{\partial\mathcal{W}} = - \int_{\mathcal{W}} \nabla p \, dV
 \end{equation*}
 
-Le forze che agiscono su di un corpo continuo possono essere di due soli tipi: le forze di stress e le forze esterne o esogene. Le forze di stress sono le forze applicate su una superficie interna al corpo dal resto del corpo. Le forze esterne sono invece forze applicate per unità di volume da agenti esterni al corpo[...]. Un fluido si dice ideale se esiste una funzione $p(\mathbf{x},t)$ detta pressione per cui le forze di stress sono del tipo $\mathbf{F}\,dA = p(\mathbf{x},t)\mathbf{n}$ cioè sono forze normali alla superficie. In particolare l'assenza di componenti tangenziali delle forze di stress impedisce l'instaurarsi o il cessare di movimenti rotatori nel fluido.
+Sostituendo nella seconda legge di Newton a cui si è aggiunto il termine relativo alle forze esterne si ottiene
+\begin{align*}
+\mathbf{F} &= m\mathbf{a} \\
+\Rightarrow \int_{\mathcal{W}}\left(-\nabla p + \rho\mathbf{b}\right)\, dV &= \int_{\mathcal{W}}\rho\frac{D\mathbf{u}}{Dt}\, dV
+\end{align*}
 
-Presa $\mathcal{W}$ una regione del fluido la forza di stress applicata dal resto del corpo è
-$$\mathbf{S}_{\partial\mathcal{W}} = - \int_{\partial\mathcal{W}} p\mathbf{n}\,dA$$.
-Scelta una direzione $\mathbf{e}$ applicando il teorema della divergenza
-$$\mathbf{e}\cdot\mathbf{S}_{\partial\mathcal{W}} = - \int_{\partial\mathcal{W}} p\mathbf{e}\cdot\mathbf{n}\,dA
-                                                  = - \int_{\mathcal{W}} \nabla p \cdot \mathbf{e} \, dV $$
-e quindi
-$$\mathbf{S}_{\partial\mathcal{W}} = - \int_{\mathcal{W}} \nabla p \, dV $$
-
-Usando la seconda legge di Newton e aggiungendo il termine relativo alle forze esterne si ottiene 
 \begin{equation}\label{eq:conservazione momento differenziale}
 \boxed{
 \rho \frac{\partial \mathbf{u}}{\partial t} = - \rho \mathbf{u} \cdot \nabla \mathbf{u} - \nabla p + \rho \mathbf{b}
@@ -222,15 +303,20 @@ Usando la seconda legge di Newton e aggiungendo il termine relativo alle forze e
 \end{equation}
 che è la legge di conservazione del momento in forma differenziale.
 
-La forma integrale della legge di conservazione del momento può essere ricavata direttamente dalla forma differenziale[...]
+La forma integrale della legge di conservazione del momento può essere ricavata direttamente dalla forma differenziale.
 \begin{equation}
 \boxed{
 \frac{d}{dt}\int_{\mathcal{W}}\rho \mathbf{u} = - \int_{\partial\mathcal{W}}(p\mathbf{n}+\rho\mathbf{u}(\mathbf{u} \cdot \mathbf{n})) \, dA + \int_{\mathcal{W}}\rho\mathbf{b}\, dV
 }  
 \end{equation}
+La quantità
+\begin{equation*}
+p\mathbf{n}+\rho\mathbf{u}(\mathbf{u}\cdot\mathbf{n})
+\end{equation*}
+è detta flusso di momento per unità di area attraverso $\partial\mathcal{W}$.
 
-E' possibile ricavare la forma integrale della legge di conservazione del momento senza passare dalla forma differenziale.
-Sia $\phi(\mathbf{x},t)$ la traiettoria seguita dal punto materiale che si trova in posizione $\mathbf{x}$ al tempo $t=0$. Si ipotizzi che $\phi$ sia regolare e invertibile per $t$ fissato. Sia $\phi_t:\mathbf{x}\mapsto\phi (\mathbf{x},t)$ la mappa che associa ad ogni punto la posizione che avrà al tempo $t$. $\phi$ è detta mappa del flusso del fluido. Indichiamo con $\mathcal{W}_t = \phi_t(\mathcal{W})$ il volume $\mathcal{W}$ trasportato dal fluido.
+E' possibile ricavare la forma integrale della legge di conservazione del momento senza passare dalla forma differenziale, in modo che sia necessario richiedere una minore regolarità alle funzioni coinvolte, sfruttando il teorema del trasporto.
+Sia $\phi(\mathbf{s},t)$ la traiettoria seguita dal punto materiale che si trova in posizione $\mathbf{x}$ al tempo $t=0$. Si ipotizzi che $\phi$ sia regolare e invertibile per $t$ fissato. Sia $\phi_t:\mathbf{s}\mapsto\phi (\mathbf{s},t)$ la mappa che associa ad ogni punto la posizione che avrà al tempo $t$. $\phi$ è detta mappa del flusso del fluido. Indichiamo con $\mathcal{W}_t = \phi_t(\mathcal{W})$ il volume $\mathcal{W}$ trasportato dal fluido.
 
 La legge di conservazione del momento si scrive quindi come
 \begin{equation}\label{eq:conservazione momento integrale}
@@ -239,54 +325,56 @@ La legge di conservazione del momento si scrive quindi come
 
 Questa è equivalente alla forma differenziale se le funzioni sono sufficientemente regolari.
 
-Compiendo un cambio di variabile nell'integrale
-$$\frac{d}{dt} \int_{\mathcal{W}_t} \rho \mathbf{u} \, dV = \frac{d}{dt} \int_{\mathcal{W}} (\rho \mathbf{u})(\phi(\mathbf{x},t),t) J(\mathbf{x},t) \, dV$$
-dove $J(\mathbf{x},t)$ è il determinante della matrice jacobiana di $\phi_t$.
-
-Differenziando ora sotto il segno di integrale nel secondo membro
-\begin{equation*}  
-\begin{split}
-\frac{d}{dt} \int_{\mathcal{W}_t} \rho \mathbf{u} \, dV &= \int_{\mathcal{W}} \frac{\partial}{\partial t}[ (\rho \mathbf{u})(\phi(\mathbf{x},t),t) J(\mathbf{x},t) ]\, dV \\
-&= \int_{\mathcal{W}} \left[\frac{\partial}{\partial t} (\rho \mathbf{u})(\phi(\mathbf{x},t),t) J(\mathbf{x},t) + (\rho \mathbf{u})(\phi(\mathbf{x},t),t) \frac{\partial}{\partial t}  J(\mathbf{x},t)\right] \, dV
-\end{split}
-\end{equation*}
-
-Si osservi che $$\frac{\partial}{\partial t} (\rho \mathbf{u})(\phi(\mathbf{x},t),t) = \left(\frac{D}{D t} \rho \mathbf{u}\right)(\phi(\mathbf{x},t),t) $$.
-
-Enunciamo ora il seguente lemma
-\begin{lemma}\label{lemma:incomprimibile}
-$\frac{\partial}{\partial t}  J(\mathbf{x},t) = J(\mathbf{x},t) \Nabla \cdot \mathbf{u} (\phi(\mathbf{x},t),t)$  
-\end{lemma}
-\begin{proof}
-[...]
-\end{proof}
-
-Applicando il lemma si ottiene
+Applicando il teorema del trasporto
+\begin{multline*}
+\frac{d}{dt} \int_{\mathcal{W}_t} \rho \mathbf{u} \, dV = \int_{\mathcal{W}}\left(\frac{D(\rho \mathbf{u})}{D t}+\Nabla\cdot\mathbf{u}(\rho \mathbf{u}) \right)\, dV = \\
+\int_{\mathcal{W}}\left(\frac{\partial(\rho \mathbf{u})}{\partial t}+\Nabla\cdot(\rho \mathbf{u})+\Nabla\cdot\mathbf{u}(\rho \mathbf{u}) \right)\, dV = \\
+\end{multline*}
+Sfruttando ora la legge di conservazione della massa
 \begin{equation*}
-\begin{split}
-\frac{d}{dt}\int_{\mathcal{W}_t}\rho\mathbf{u}\, dV &= \int_{\mathcal{W}} \left \{ \left ( \frac{D}{Dt}\rho\mathbf{u} \right )(\phi(\mathbf{x},t),t)+(\rho\mathbf{u})(\Nabla\cdot\mathbf{u})(\phi(\mathbf{x},t),t) \right \} J(\mathbf{x},t)\, dV\\
-&=\int_{\mathcal{W}_t}\left \{ \frac{D}{Dt}(\rho\mathbf{u})+(\rho\Nabla\cdot\mathbf{u})\mathbf{u}\right \}\,dV
-\end{split}
+\frac{D\rho}{D t}+\rho\Nabla\cdot\mathbf{u} = \frac{\partial\rho}{\partial t} + \Nabla\cdot(\rho\mathbf{u})
 \end{equation*}
-Usando ora l'equazione \ref{eq:conservazione massa differenziale}
-$$\frac{D}{Dt}\rho+\rho\Nabla\cdot\mathbf{u}=\frac{\partial\rho}{\partial t}+\Nabla\cdot(\rho\mathbf{u})$$
-e quindi
-$$\frac{d}{dt}\int_{\mathcal{W}_t}\rho\mathbf{u}\, dV = \int_{\mathcal{W}_t}\rho\frac{D\mathbf{u}}{Dt}\, dV$$.
+si ottiene
+\begin{equation*}
+\frac{d}{dt} \int_{\mathcal{W}_t} \rho \mathbf{u} \, dV = \int_{\mathcal{W}_t} \rho \frac{D\mathbf{u}}{Dt}\, dV
+\end{equation*}
 
-Questo ragionamento è in realtà valido per ogni funzione e prende il nome di teorema del trasporto.
-\begin{theorem}{Teorema del trasporto}
-$$ \forall f:\mathbb{R}^3\times[0,T]\mapsto M $$ $$\frac{d}{dt}\int_{\mathcal{W}_t}\rho f\, dV = \int_{\mathcal{W}_t}\rho\frac{Df}{Dt}\,dV$$
+Questo ragionamento è in realtà valido per ogni funzione
+\begin{theorem}
+$\forall f:\mathbb{R}^3\times[0,T]\mapsto \mathbb{R}$ vale la seguente eguaglianza
+\begin{equation*}
+\frac{d}{dt}\int_{\mathcal{W}_t}\rho f\, dV = \int_{\mathcal{W}_t}\rho\frac{Df}{Dt}\,dV
+\end{equation*}
 \end{theorem}
+Osserviamo che si tratta di una forma particolare del teorema del trasporto.
 
 Essendo le funzioni continue e $\mathcal{W}$ qualunque allora \ref{eq:conservazione momento integrale} è equivalente a \ref{eq:conservazione momento differenziale}.
 
-Sfruttando il lemma \ref{lemma:incomprimibile}possiamo caratterizzare i fluidi incomprimibili infatti
-$$\volume(\mathcal{W}_t) = \int_{\mathcal{W}_t} \, dV$$
+Sfruttando il lemma \ref{lemma:incomprimibile} possiamo caratterizzare i fluidi incomprimibili infatti
+\begin{equation*}
+\volume(\mathcal{W}_t) = \int_{\mathcal{W}_t} \, dV
+\end{equation*}
 quindi per un fluido incomprimibile
-$$0 = \frac{d}{dt} \int_{\mathcal{W}_t} \, dV  = \int_{\mathcal{W}_t} \Nabla \cdot \mathbf{u} \, dV$$
-Quindi un fluido è incomprimibile se e solo se $\Nabla \cdot \mathbf{u}=0$ ( o anche se e solo se $J \equiv 1$ ).
-$$0 = \frac{\partial \rho}{\partial t} + \Nabla\cdot(\rho \mathbf{u}) = \frac{D\rho}{Dt} + \rho\Nabla\cdot \mathbf{u}$$
-quindi un fluido è incomprimibile se e solo se $\frac{D \rho}{Dt} = 0$ cioè se e solo se la densità del fluido è costante seguendo il flusso.
+\begin{equation*}
+0 = \frac{d}{dt} \int_{\mathcal{W}_t} \, dV  = \int_{\mathcal{W}_t} \Nabla \cdot \mathbf{u} \, dV
+\end{equation*}
+Quindi un fluido è incomprimibile se e solo se 
+\begin{equation*}
+\Nabla \cdot \mathbf{u}=0
+\end{equation*}
+o anche se e solo se
+\begin{equation*}
+J \equiv 1
+\end{equation*}
+Osserviamo che
+\begin{equation*}
+0 = \frac{\partial \rho}{\partial t} + \Nabla\cdot(\rho \mathbf{u}) = \frac{D\rho}{Dt} + \rho\Nabla\cdot \mathbf{u}
+\end{equation*}
+quindi un fluido è incomprimibile se e solo se
+\begin{equation*}
+\frac{D \rho}{Dt} = 0
+\end{equation*}
+cioè se e solo se la densità del fluido è costante seguendo il flusso.
 Un fluido si dice omogeneo se $\rho(\mathbf{x},t)=C_t \quad \forall \mathbf{x}$, è anche incomprimibile se $C_t=C \quad \forall t$
 
 Diamo ora un'altra caratterizzazione della legge di conservazione della massa sfruttando il teorema del trasporto.
@@ -304,30 +392,31 @@ e quindi
 In particolare si nota che un fluido omogeneo ma non incomprimibile non rimane omogeneo col passare del tempo.
 
 \paragraph{La conservazione dell'energia}
-Sia $$E_{\text{kinetic}} = \frac{1}{2} \int_{\mathcal{W}} \rho \Vert \mathbf{u} \Vert^2 \, dV$$ l'energia cinetica del fluido contenuto in $\mathcal{W}$, $E_{\text{internal}}$ l'energia interna dovuta a fenomeni microscopici tra le molecole del fluido e $$E_{\text{total}}=E_{\text{kinetic}}+E_{\text{internal}}$$ l'energia totale.
+Sia
+\begin{equation*}
+E_{\text{kinetic}} = \frac{1}{2} \int_{\mathcal{W}} \rho \Vert \mathbf{u} \Vert^2 \, dV
+\end{equation*}
+l'energia cinetica del fluido contenuto in $\mathcal{W}$, $E_{\text{internal}}$ l'energia interna dovuta a fenomeni microscopici tra le molecole del fluido e $$E_{\text{total}}=E_{\text{kinetic}}+E_{\text{internal}}$$ l'energia totale.
 La variazione dell'energia cinetica nella porzione di fluido in movimento $\mathcal{W}_t$ calcolata grazie al teorema del trasporto è 
-\begin{equation}
-\begin{split}
+\begin{align*}
 \frac{d}{dt} E_{\text{kinetic}} &= \frac{d}{dt} \frac{1}{2} \int_{\mathcal{W}} \rho \Vert \mathbf{u} \Vert^2 \, dV \\
                                 &= \frac{1}{2}  \int_{\mathcal{W}_t} \rho \frac{D\Vert \mathbf{u} \Vert^2}{Dt} \, dV \\
                                 &=  \int_{\mathcal{W}_t} \rho ( \mathbf{u} \cdot ( \frac{\partial \mathbf{u}}{\partial t} + (\mathbf{u} \cdot \nabla) \mathbf{u} )) \, dV
-\end{split}
-\end{equation}
-[...]
+\end{align*}
 
 Consideriamo ora il caso in cui il fluido sia incomprimibile e che tutta l'energia del fluido sia nella forma di energia cinetica (oppure è sufficiente che l'energia interna sia costante). Allora la variazione dell'energia cinetica è dovuta al lavoro compiuto dalla pressione e dalle forze esterne
 
-$$\frac{d}{dt} E_{\text{kinetic}} = - \int_{\partial \mathcal{W}_t} p \mathbf{u} \cdot \mathbf{n} \, dA + \int_{\mathcal{W}_t} \rho \mathbf{u} \cdot \mathbf{b} \, dV $$
+\begin{equation*}
+\frac{d}{dt} E_{\text{kinetic}} = - \int_{\partial \mathcal{W}_t} p \mathbf{u} \cdot \mathbf{n} \, dA + \int_{\mathcal{W}_t} \rho \mathbf{u} \cdot \mathbf{b} \, dV
+\end{equation*}
 
 e quindi usando il teorema della divergenza e tenendo conto che $\nabla \cdot \mathbf{u} = 0$
 
-\begin{equation}
-\begin{split}
+\begin{align*}
 \int_{\mathcal{W}_t} \rho \left ( \mathbf{u} \cdot \left ( \frac{\partial \mathbf{u}}{\partial t} + \mathbf{u} \cdot \Nabla \mathbf{u} \right )\right ) \, dV
  &= - \int_{\mathcal{W}_t} ( \Nabla \cdot (p\mathbf{u}) - \rho \mathbf{u} \cdot \mathbf{b}) \, dV \\
  &=  - \int_{\mathcal{W}_t} ( \nabla p  \cdot \mathbf{u}) - \rho \mathbf{u} \cdot \mathbf{b}) \, dV
-\end{split}
-\end{equation}
+\end{align*}
 Osserviamo che se varia solo l'energia cinetica allora il fluido è incomprimibile [oppure $p=0$, fluido fermo].
  
 Si ottengono cosi le equazioni di Eulero per i fluidi incomprimibili
@@ -341,7 +430,8 @@ Si ottengono cosi le equazioni di Eulero per i fluidi incomprimibili
 }
 \end{equation}
 a cui va aggiunta la condizione al bordo 
-$$\mathbf{u} \cdot \mathbf{n} = 0 \quad \text{su} \quad \partial \mathcal{D}$$
+\begin{equation}\mathbf{u} \cdot \mathbf{n} = 0 \quad \text{su} \quad \partial \mathcal{D}
+\end{equation}
  
 [FLUIDI ISENTROPICI?]
 Consideriamo il caso ora di un fluido isoentropico ovvero in cui esiste una funzione $w$ chiamata entalpia per cui
