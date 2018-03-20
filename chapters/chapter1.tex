@@ -1,4 +1,4 @@
-% introduction.tex
+% chapter1.tex
 
 \chapter{Principi di Fluidodinamica ed Elasiticità}
 %The Finite Element Immersed Boundary Method, L. Heltai ,Ph.D. Thesis , 2006, capitolo 1 19-35
@@ -397,27 +397,48 @@ Sia
 E_{\text{kinetic}} = \frac{1}{2} \int_{\mathcal{W}} \rho \Vert \mathbf{u} \Vert^2 \, dV
 \end{equation*}
 l'energia cinetica del fluido contenuto in $\mathcal{W}$, $E_{\text{internal}}$ l'energia interna dovuta a fenomeni microscopici tra le molecole del fluido e $$E_{\text{total}}=E_{\text{kinetic}}+E_{\text{internal}}$$ l'energia totale.
-La variazione dell'energia cinetica nella porzione di fluido in movimento $\mathcal{W}_t$ calcolata grazie al teorema del trasporto è 
+La variazione dell'energia cinetica nella porzione di fluido in movimento $\mathcal{W}_t$ calcolata grazie al teorema del trasporto è pari a
 \begin{align*}
 \frac{d}{dt} E_{\text{kinetic}} &= \frac{d}{dt} \frac{1}{2} \int_{\mathcal{W}} \rho \Vert \mathbf{u} \Vert^2 \, dV \\
                                 &= \frac{1}{2}  \int_{\mathcal{W}_t} \rho \frac{D\Vert \mathbf{u} \Vert^2}{Dt} \, dV \\
                                 &=  \int_{\mathcal{W}_t} \rho ( \mathbf{u} \cdot ( \frac{\partial \mathbf{u}}{\partial t} + (\mathbf{u} \cdot \nabla) \mathbf{u} )) \, dV
 \end{align*}
+risultato ottenuto osservando che
+\begin{multline*}
+\frac{1}{2}\frac{D}{Dt}\Vert\mathbf{u}\Vert^2 =
+\frac{1}{2}\frac{\partial}{\partial t}(u^2+v^2+w^2)+ \\
+\frac{1}{2}\left(u\frac{\partial}{\partial x}(u^2+v^2+w^2)+
+v\frac{\partial}{\partial y}(u^2+v^2+w^2)+
+w\frac{\partial}{\partial z}(u^2+v^2+w^2)\right) = \\
+u\frac{\partial u}{\partial t} + v\frac{\partial v}{\partial t} +w\frac{\partial w}{\partial t} +
+u\left(u\frac{\partial u}{\partial x}
++v\frac{\partial v}{\partial x}+w\frac{\partial w}{\partial x}\right)
++ \\ v\left(u\frac{\partial u}{\partial y}
++v\frac{\partial v}{\partial y}+w\frac{\partial w}{\partial y}\right)
+ +
+w\left(u\frac{\partial u}{\partial z}
++v\frac{\partial v}{\partial z}+w\frac{\partial w}{\partial z}\right) = \\
+\mathbf{u}\frac{\partial\mathbf{u}}{\partial t}+\mathbf{u}\cdot(\mathbf{u}\cdot\Nabla\mathbf{u})
+\end{multline*}
 
-Consideriamo ora il caso in cui il fluido sia incomprimibile e che tutta l'energia del fluido sia nella forma di energia cinetica (oppure è sufficiente che l'energia interna sia costante). Allora la variazione dell'energia cinetica è dovuta al lavoro compiuto dalla pressione e dalle forze esterne
+
+Consideriamo ora il caso in cui il fluido sia incomprimibile e che tutta l'energia del fluido sia nella forma di energia cinetica (è sufficiente che l'energia interna sia costante). Allora la variazione dell'energia cinetica è dovuta al lavoro compiuto dalla pressione e dalle forze esterne
 
 \begin{equation*}
 \frac{d}{dt} E_{\text{kinetic}} = - \int_{\partial \mathcal{W}_t} p \mathbf{u} \cdot \mathbf{n} \, dA + \int_{\mathcal{W}_t} \rho \mathbf{u} \cdot \mathbf{b} \, dV
 \end{equation*}
 
-e quindi usando il teorema della divergenza e tenendo conto che $\nabla \cdot \mathbf{u} = 0$
-
+e quindi usando il teorema della divergenza e tenendo conto che
+\begin{equation*}
+\nabla \cdot \mathbf{u} = 0
+\end{equation*}
+si ottiene
 \begin{align*}
 \int_{\mathcal{W}_t} \rho \left ( \mathbf{u} \cdot \left ( \frac{\partial \mathbf{u}}{\partial t} + \mathbf{u} \cdot \Nabla \mathbf{u} \right )\right ) \, dV
  &= - \int_{\mathcal{W}_t} ( \Nabla \cdot (p\mathbf{u}) - \rho \mathbf{u} \cdot \mathbf{b}) \, dV \\
- &=  - \int_{\mathcal{W}_t} ( \nabla p  \cdot \mathbf{u}) - \rho \mathbf{u} \cdot \mathbf{b}) \, dV
+ &=  - \int_{\mathcal{W}_t} ( \nabla p  \cdot \mathbf{u} - \rho \mathbf{u} \cdot \mathbf{b}) \, dV
 \end{align*}
-Osserviamo che se varia solo l'energia cinetica allora il fluido è incomprimibile [oppure $p=0$, fluido fermo].
+Osserviamo che se si suppone che tutta l'energia del corpo sia sotto forma di energia cinetica allora il fluido è incomprimibile (oppure $p\equiv 0$).
  
 Si ottengono cosi le equazioni di Eulero per i fluidi incomprimibili
 \begin{equation}
@@ -432,12 +453,6 @@ Si ottengono cosi le equazioni di Eulero per i fluidi incomprimibili
 a cui va aggiunta la condizione al bordo 
 \begin{equation}\mathbf{u} \cdot \mathbf{n} = 0 \quad \text{su} \quad \partial \mathcal{D}
 \end{equation}
- 
-[FLUIDI ISENTROPICI?]
-Consideriamo il caso ora di un fluido isoentropico ovvero in cui esiste una funzione $w$ chiamata entalpia per cui
-$\nabla w = \frac{1}{\rho} \nabla p$
-[parentesi termodinamica]
-La maggior parte dei gas reali può essere considerata come un fluido isoentropico in cui $p = A \rho ^ \gamma$ con $A$ e $\gamma \geq 1$ costanti.
 
 %MARDSEN
 \paragraph{Leggi di Conservazione}
@@ -509,7 +524,9 @@ I rimanenti gradi di libertà possono essere utilizzati per modellizzare vari ti
 \subsection{Rotazioni e vorticità}
 
 Sia $\mathbf{u} = (u,v,w)$ il campo delle velocità di un fluido allora il suo rotore 
-$$\boldsymbol{\xi} = \nabla \times \mathbf{u} = (\partial_y w - \partial_z v, \partial_z u - \partial_x w, \partial_x v - \partial_y u)$$
+\begin{equation*}
+\boldsymbol{\xi} = \nabla \times \mathbf{u} = (\partial_y w - \partial_z v, \partial_z u - \partial_x w, \partial_x v - \partial_y u)
+\end{equation*}
 è detto campo della vorticità del fluido.
 
 Si può dimostrare che $\mathbf{u}$ è localmente la somma di una traslazione rigida, di una deformazione e di una rotazione rigida di vettore $\frac{\boldsymbol{\xi}}{2}$. Cominciamo enunciando il seguente teorema che vale per ogni campo vettoriale definito su $\mathbb{R}^3$.
@@ -519,7 +536,7 @@ Sia $\mathbf{x} \in \mathbb{R}^3$ e $\mathbf{y} = \mathbf{x} + \mathbf{h}$ un pu
 \begin{equation}\label{eq:helmoltz}
 \mathbf{u}(\mathbf{y}) = \mathbf{u}(\mathbf{x}) + \mathbf{D}(\mathbf{x}) \cdot \mathbf{h} + \frac{1}{2} \boldsymbol{\xi}(\mathbf{x}) \times \mathbf{h} + \mathcal{O} ( h^2)
 \end{equation}
-con $\mathbf{D}$ matrice simmetrica.
+dove $\mathbf{D}$ è una matrice simmetrica.
 \end{theorem}
 \begin{proof}
 Sia
@@ -534,13 +551,19 @@ Sia
 \end{equation}
 la matrice jacobiana di $\mathbf{u}$.
 Per il teorema di Taylor
-$$\mathbf{u}(\mathbf{y}) = \mathbf{u}(\mathbf{x}) + \Nabla\mathbf{u}(\mathbf{x}) \cdot \mathbf{h} + \mathcal{O} ( h^2)$$
+\begin{equation*}
+\mathbf{u}(\mathbf{y}) = \mathbf{u}(\mathbf{x}) + \Nabla\mathbf{u}(\mathbf{x}) \cdot \mathbf{h} + \mathcal{O} ( h^2)
+\end{equation*}
 Siano rispettivamente
-$$\mathbf{D} = \frac{1}{2} [ \Nabla\mathbf{u} + \Nabla\mathbf{u} ^T]$$
+\begin{equation*}
+\mathbf{D} = \frac{1}{2} [ \Nabla\mathbf{u} + \Nabla\mathbf{u} ^T]
+\end{equation*}
 la parte simmetrica e
-$$\mathbf{S} = \frac{1}{2} [ \Nabla\mathbf{u} - \Nabla\mathbf{u} ^T]$$
+\begin{equation*}
+\mathbf{S} = \frac{1}{2} [ \Nabla\mathbf{u} - \Nabla\mathbf{u} ^T]
+\end{equation*}
 la parte antisimmetrica di $ \Nabla\mathbf{u}$.
-\`E immediato verificare che
+\`E immediato verificare che $\mathbf{S}$ è nella forma
 \begin{equation}
 \mathbf{S}=\frac{1}{2}{\setlength\arraycolsep{2pt} 
 \left(\begin{array}{ccc} 
@@ -551,7 +574,9 @@ la parte antisimmetrica di $ \Nabla\mathbf{u}$.
 }
 \end{equation}
 e quindi
-$$\mathbf{S} \cdot \mathbf{h} = \frac{1}{2} \boldsymbol{\xi} \times \mathbf{h}$$.
+\begin{equation*}
+\mathbf{S} \cdot \mathbf{h} = \frac{1}{2} \boldsymbol{\xi} \times \mathbf{h}
+\end{equation*}
 \qed
 \end{proof}
 
@@ -566,7 +591,9 @@ d_1 & 0 & 0 \\
 }
 \end{equation}.
 Considerando solo il contributo di questo termine l'equazione \ref{eq:helmoltz} diventa 
-$$\frac{d h_i}{dt} = d_i h_i$$
+\begin{equation*}
+\frac{d h_i}{dt} = d_i h_i
+\end{equation*}
 Si tratta quindi di una contrazione o espansione nelle direzione della base ortonormale trovata.
 
 Inoltre è possibile calcolare la variazione di volume
@@ -583,9 +610,13 @@ perché la traccia è invariante rispetto a cambi di coordinate. Si riottiene qu
 Il termine $\mathbf{u}(\mathbf{x})$ è una traslazione.
 
 Il termine $\frac{1}{2}\boldsymbol{\xi}(\mathbf{x})\times\mathbf{h}$, usando lo stesso ragionamento usato nel caso di $\mathbf{D}$
-$$\frac{d\mathbf{h}}{dt}=\frac{1}{2}\boldsymbol{\xi}(\mathbf{x})\times\mathbf{h}$$
+\begin{equation*}
+\frac{d\mathbf{h}}{dt}=\frac{1}{2}\boldsymbol{\xi}(\mathbf{x})\times\mathbf{h}
+\end{equation*}
 la cui soluzione è
-$$\mathbf{h}(t)=\mathbf{R}(t,\boldsymbol{\xi}(\mathbf{x}))\mathbf{h}(0)$$
+\begin{equation*}
+\mathbf{h}(t)=\mathbf{R}(t,\boldsymbol{\xi}(\mathbf{x}))\mathbf{h}(0)
+\end{equation*}
 con $\mathbf{R}$ rotazione rigida di angolo $t$ e asse $\boldsymbol{\xi}$. 
 
 Le ipotesi fatte fino ad ora impediscono il presentarsi di qualsiasi forza tangenziale e quindi di qualsiasi meccanismo che possa causare o fermare una rotazione del fluido, cioè in ogni movimento del fluido la rotazione viene conservata. Data la stretta connessione tra rotazione e vorticità ci si aspetta che la vorticità sia connessa a questo fatto. 
@@ -595,7 +626,7 @@ Le ipotesi fatte fino ad ora impediscono il presentarsi di qualsiasi forza tange
 \subsection{L'equazione di Navier Stokes}
 Nei fluidi reali la quantità di moto viene diffusa anche grazie ai movimenti molecolari.
 Rinunciamo ora all'ipotesi che il fluido sia ideale, e quindi ammettiamo anche forze di stress non in direzione normale.
-Il teorema di Cauchy ci garantisce che la forza che agisce su $S$ è una 
+Il teorema di Cauchy ci garantisce che la forza che agisce su $S$ è una d
 $$F \, dA = -p(\mathbf{x},t) \mathbf{n} + \boldsymbol{\sigma}(\mathbf{x},t) \cdot \mathbf{n}$$
 dove $\boldsymbol{\sigma}$ è il tensore degli stress.
 Con questa nuova forza la legge di conservazione del momento diventa
@@ -643,100 +674,121 @@ $$\Nabla\cdot\boldsymbol{\sigma}=-\nabla p+\eta\Delta\mathbf{u}$$.
 Scriviamo ora l'equazione di Navier-Stokes in forma variazionale.
 
 Sia
-$$\mathbf{V} = H^1_0(\Omega)^d = \bigg \{ \mathbf{v} \in L^2(\Omega)^d \quad \tc \quad \Nabla \mathbf{v} \in L^2(\Omega)^{d \times d} \quad \text{e} \quad \mathbf{v}\mid_{\partial \Omega} = 0 \bigg \} $$
+\begin{equation*}
+\mathbf{V} = H^1_0(\Omega)^d = \bigg \{ \mathbf{v} \in L^2(\Omega)^d \quad \tc \quad \Nabla \mathbf{v} \in L^2(\Omega)^{d \times d} \quad \text{e} \quad \mathbf{v}\mid_{\partial \Omega} = 0 \bigg \}
+\end{equation*}
 lo spazio delle velocità e 
-$$Q = L^2_0(\Omega) = \left  \{ q \in L^2(\Omega) \quad \tc \quad \int_{\Omega}q=0 \right  \}$$ lo spazio delle pressioni. Indichiamo con $V'$ lo spazio duale di $V$.
+\begin{equation*}
+Q = L^2_0(\Omega) = \left  \{ q \in L^2(\Omega) \quad \tc \quad \int_{\Omega}q=0 \right  \}
+\end{equation*}
+lo spazio delle pressioni. Indichiamo con $\mathbf{V}'$ lo spazio duale di $\mathbf{V}$.
 
-Dati $b \in \mathbf{V}'$ e $\mathbf{u}_0 \in \mathbf{V}$, per ogni $t \in ]0,T[$ trovare $(\mathbf{u},p) \in V \times Q$ tale che
-\begin{multline*}
-\rho \left ( \frac{d}{dt}\ps{\mathbf{u}(t)}{\mathbf{v}} + \ps{\mathbf{u}(t)\cdot \Nabla\mathbf{u}(t)}{\mathbf{v})}\right)+ \nu\ps{\Nabla\mathbf{u}(t)}{\Nabla\mathbf{v}}-\ps{\Nabla \mathbf{v}}{p(t)}=\ps{\mathbf{b}}{\mathbf{v}} \qquad \forall \mathbf{v}\in\mathbf{V}
-\end{multline*}
-$$\ps{\Nabla\cdot\mathbf{u}(t)}{q}=0 \qquad \forall q\in\mathbf{Q}$$
-$$\mathbf{u}(\mathbf{x},0)=\mathbf{u}_0(\mathbf{x}) \qquad \forall \mathbf{x}\in\Omega$$
+Dati $\mathbf{b} \in \mathbf{V}'$ e $\mathbf{u}_0 \in \mathbf{V}$, per ogni $t \in (0,T)$ trovare $(\mathbf{u},p) \in \mathbf{V} \times Q$ tale che
+\begin{align*}
+\rho \left ( \frac{d}{dt}\ps{\mathbf{u}(t)}{\mathbf{v}} + \ps{\mathbf{u}(t)\cdot \Nabla\mathbf{u}(t)}{\mathbf{v})}\right)+ \nu\ps{\Nabla\mathbf{u}(t)}{\Nabla\mathbf{v}}-\ps{\Nabla \mathbf{v}}{p(t)}=\ps{\mathbf{b}}{\mathbf{v}} \qquad & \forall \mathbf{v}\in\mathbf{V} \\
+\ps{\Nabla\cdot\mathbf{u}(t)}{q}=0 \qquad & \forall q\in\mathbf{Q} \\
+\mathbf{u}(\mathbf{x},0)=\mathbf{u}_0(\mathbf{x}) \qquad & \forall \mathbf{x}\in\Omega
+\end{align*}
+dove $(\cdot,\cdot)$ rappresenta il prodotto di dualità tra $\mathbf{V}$ e $\mathbf{V}'$ e il prodotto interno di $Q$ a seconda degli argomenti coinvolti.
 
 Definendo i seguenti operatori associati ai termini dell'equazione di Navier-Stokes
-\begin{equation}
-\begin{aligned}
+\begin{align*}
 (M\mathbf{u})(\mathbf{v})&=\rho\ps{\mathbf{u}}{\mathbf{v}} \quad &\mathbf{u},\mathbf{v}\in \mathbf{V}\\
 (A\mathbf{u})(\mathbf{v})&=a(\mathbf{u},\mathbf{v})=\eta\ps{\Nabla\mathbf{u}}{\Nabla\mathbf{v}} \quad &\mathbf{u},\mathbf{v}\in \mathbf{V}\\
 (N(\mathbf{w})\mathbf{u})(\mathbf{v})&=c(\mathbf{w},\mathbf{u},\mathbf{v})=\rho\ps{\mathbf{w}\cdot\Nabla\mathbf{u}}{\Nabla\mathbf{v}} \quad &\mathbf{w},\mathbf{u},\mathbf{v}\in \mathbf{V}\\
 (B\mathbf{u})(q)&=b(\mathbf{u},q)=\ps{\Nabla\cdot\mathbf{u}}{q} \quad &\mathbf{u}\in \mathbf{V},q\in Q
-\end{aligned}
-\end{equation}
+\end{align*}
 possiamo riscrivere le equazioni come
-\begin{equation}
-\begin{aligned}
+\begin{align*}
 &\rho\frac{d}{dt}\ps{\mathbf{u}}{\mathbf{v}}+a(\mathbf{u},\mathbf{v})+c(\mathbf{w},\mathbf{u},\mathbf{v})+b(\mathbf{v},p)=\ps{\mathbf{b}}{\mathbf{u}} \quad &\forall\mathbf{v}\in\mathbf{V}\\
 &b(\mathbf{u},q)=0 \quad &\forall q\in Q\\
 &\mathbf{u}(\mathbf{x},0)=\mathbf{u}_0(\mathbf{x})&
-\end{aligned}
-\end{equation}
-oppure in termini di operatori degli spazi duali
-\begin{equation}
-\begin{aligned}
+\end{align*}
+oppure, in termini di operatori degli spazi duali, come
+\begin{align*}
 &M\frac{\partial\mathbf{u}}{\partial t}+A\mathbf{u}+N(\mathbf{u})\mathbf{u}+B^{T}p=\mathbf{b}\\
 &B\mathbf{u}=0\\
 &\mathbf{u}(\mathbf{x},0)=\mathbf{u}_0(\mathbf{x})&
-\end{aligned}
-\end{equation}
-[vedi 31,32,33,34]
+\end{align*}
 
 \paragraph{Stima dell'energia}
 \begin{theorem}
-Per ogni $t \in ]0,T[$ sia $(\mathbf{u}(t),p(t)) \in V \times Q$ la soluzione del problema con $\mathbf{b}=0$, allora
-$$\rho \frac{1}{2} \frac{d}{dt} \Vert \mathbf{u} (t) \Vert^2_{0,\Omega} + \eta \Vert \Nabla \mathbf{u} (t) \Vert^2_{0,\Omega} = 0$$
+Per ogni $t \in (0,T)$ sia $(\mathbf{u}(t),p(t)) \in \mathbf{V} \times Q$ la soluzione del problema con $\mathbf{b}=0$, allora
+\begin{equation*}
+\rho \frac{1}{2} \frac{d}{dt} \Vert \mathbf{u} (t) \Vert^2_{0,\Omega} + \eta \Vert \Nabla \mathbf{u} (t) \Vert^2_{0,\Omega} = 0
+\end{equation*}
 \end{theorem}
 \begin{proof}
-Per dimostrarlo si prendano $\mathbf{v}=\mathbf{u}$ e $q=p$ come funzioni di test nelle equazioni. Allora $b(\mathbf{u},p)=0$ e $c(\mathbf{u},\mathbf{u},\mathbf{u})=0$.
-$$
+Per dimostrarlo si prendano $\mathbf{v}=\mathbf{u}$ e $q=p$ come funzioni di test nelle equazioni, allora $b(\mathbf{u},p)=0$ e $c(\mathbf{u},\mathbf{u},\mathbf{u})=0$ e quindi
+\begin{equation*}
 \rho\ps{\frac{\partial \mathbf{u}}{\partial t}}{\mathbf{u}}+\eta\ps{\Nabla\mathbf{u}}{\Nabla\mathbf{u}} = 
 \rho\frac{1}{2}\frac{\partial} {\partial t}\Vert\mathbf{u}\Vert^2+\eta\Vert \Nabla\mathbf{u}\Vert^2 = 0
-$$
+\end{equation*}
 \end{proof}
-Il teorema afferma che la variazione di energia cinetica è pari all'energia dissipata dai fenomeni viscosi.
+Il teorema afferma che la variazione di energia cinetica è pari all'energia dissipata dai fenomeni viscosi e che l'energia totale del fluido è limitata dall'energia cinetica iniziale.
 I fluidi governati dalle equazioni di Navier-Stokes incomprimibili non possono accumulare energia se non sottoforma di energia cinetica dato che il fluido è incomprimibile e lo stress $\boldsymbol{\sigma}$ non dipende dalla deformazione del fluido. 
 
 \section{Teoria matematica dell'elasticità}
-%Mersden Mathematical Foundation of Elasticity
+%Marsden Mathematical Foundation of Elasticity
 La caratteristica dei materiali elastici, a differenza dei fluidi, è quella di tendera a ritornare nella proprio posizione di equilibrio, cioè la configurazione che minimizza una data funzione energia dipendente dalla configurazione e specifica per il materiale, detta configurazione di riferimento o configurazione di equilibrio, che rappresenta lo stato non deformato del materiale. Questa posizione e la traiettoria seguita dai punti del corpo per raggiungerla dipende dalla natura del materiale elastico e in definitiva dalla sua legge costitutiva.
 
-Anche per i materiali elastici valgono le leggi di conservazione della massa e del momento, e quindi dati [...] per un particolare tensore degli stress $\mathbf{\sigma}$ sarà ancora valida l'equazione del moto di Cauchy
+Anche per i materiali elastici valgono le leggi di conservazione della massa e del momento, e quindi dati la densità del materiale $\rho$, il tensore degli stress di Cauchy $\boldsymbol{\sigma}$ e la forza esterna $\mathbf{b}$ sarà ancora valida l'equazione del moto di Cauchy
 
-$$
-\rho\frac{d\mathbf{v}}{dt} = \Nabla\cdot \mathbf{\sigma} + \rho\mathbf{b}
-$$
+\begin{equation*}
+\rho\frac{d\mathbf{u}}{dt} = \Nabla\cdot \boldsymbol{\sigma} + \rho\mathbf{b}
+\end{equation*}
 
 \subparagraph{In coordinate lagrangiane}
 \'E possibile esprimere il tensore di Cauchy in coordinate lagrangiane sfruttando le quantità materiali al posto di quelle spaziali, ottenendo così i vettori degli stress di Piola-Kirchhoff.
-Il primo vettore di stress di Piola-Kirchhoff $\mathbf{T}(\mathbf{X},t,\mathbf{n})$ è un vettore parallelo al vettore di stress di Cauchy $\mathbf{t}(\mathbf{x},t,\mathbf{n})$, ma misura la forza per unità di area non deformata,
-cioè $\mathbf{T}\,d\mathbf{A} = \mathbf{t}\,da$.
-Sfruttando l'identità di Piola
-$$
-\Nabla \cdot (J\mathbf{F}^{-1}) = 0
-$$
+Il primo vettore di stress di Piola-Kirchhoff $\mathbf{T}(\mathbf{s},t,\mathbf{n})$ è un vettore parallelo al vettore di stress di Cauchy $\mathbf{t}(\mathbf{x},t,\mathbf{n})$, ma misura la forza per unità di area non deformata,
 cioè
-$$
-\frac{\partial}{\partial X_j}(J\frac{\partial X_j}{\partial x_i}) = 0
-$$
-che si ottiene osservando che $J\mathbf{F}^{-1}$ è la matrice dei cofattori di $\mathbf{F}$ cioè
-$$
-(J\mathbf{F}^{-1})^r_k = \epsilon_{ijk}\epsilon^{pqr}\mathbf{F}^i_p\mathbf{F}^j_q
-$$
-dove $\epsilon$ è il tensore di Levi-Civita.
+\begin{equation*}\mathbf{T}\,d\mathbf{A} = \mathbf{t}\,da
+\end{equation*}
 
-Sia $\mathbf{P}=J\boldsymbol{\sigma}\mathbf{F}^{-T}$ il primo tensore di Piola-Kirchhoff allora
-$$\frac{d}{dt}\int_{\mathcal{U}}\rho_{\mathcal{B}}\mathbf{V}\, d\mathbf{X} = \int_\mathcal{U}\Nabla\cdot\mathbf{P}+\rho_{\mathcal{B}}\mathbf{B}\, d\mathbf{X} $$.
-Sia $\mathbf{S}=\mathbf{F}^{-1}\mathbf{P}$ il secondo tensore di Piola-Kirchhoff.
+Sfruttando l'identità di Piola
+\begin{equation*}
+\Nabla \cdot (J\mathbf{F}^{-1}) = 0
+\end{equation*}
+cioè
+\begin{equation*}
+\frac{\partial}{\partial x_j}(J\frac{\partial X_j}{\partial s_i}) = 0
+\end{equation*}
+che si ottiene osservando che $J\mathbf{F}^{-1}$ è la matrice dei cofattori di $\mathbf{F}$ cioè
+\begin{equation*}
+(J\mathbf{F}^{-1})^r_k = \epsilon_{ijk}\epsilon^{pqr}\mathbf{F}^i_p\mathbf{F}^j_q
+\end{equation*}
+dove $\epsilon$ è il tensore di Levi-Civita possiamo definire il primo tensore di Piola-Kirchhoff come 
+\begin{equation*}
+\mathbf{P}=J\boldsymbol{\sigma}\mathbf{F}^{-T}
+\end{equation*}
+allora l'equazione di Cauchy diventa
+\begin{equation*}
+\frac{d}{dt}\int_{\mathcal{U}}\rho_{\mathcal{B}}\mathbf{V}\, d\mathbf{X} = \int_\mathcal{U}\Nabla\cdot\mathbf{P}+\rho_{\mathcal{B}}\mathbf{B}\, d\mathbf{X}
+\end{equation*}
+
+Definiamo il secondo tensore di Piola-Kirchhoff come
+\begin{equation*}
+\mathbf{S}=\mathbf{F}^{-1}\mathbf{P}
+\end{equation*}
+cioè
+\begin{equation*}
+S_{ij} = \sum \frac{\partial X_i}{\partial s_k}P_{kj}
+\end{equation*}
+
 
 \paragraph{Materiali elastici}
-Per risolvere le equazioni del moto bisogna determinare come la forza nella seconda equazione di Newton dipende dalla posizione e dalla velocità e come lo stress dipende dal moto nell'equazione del moto di Cauchy. 
-Un materiale è elastico se esiste una funzione detta funzione costitutiva $\hat{\mathbf{P}}$ tale che
-$$\mathbf{P}(\mathbf{X},t)=\hat{\mathbf{P}}(\mathbf{X},\mathbf{F}(\mathbf{X},t)) $$
+Per risolvere le equazioni del moto bisogna determinare come la forza nella seconda equazione di Newton dipende dalla posizione e dalla velocità delle particelle che costituiscono il corpo e come lo stress dipende dal moto nell'equazione del moto di Cauchy. 
+Un materiale è elastico se esiste una funzione detta funzione costitutiva $\widehat{\mathbf{P}}$ tale che
+\begin{equation*}
+\mathbf{P}(\mathbf{X},t)=\widehat{\mathbf{P}}(\mathbf{X},\mathbf{F}(\mathbf{X},t))
+\end{equation*}
 cioè il primo tensore di Piola-Kirchhoff dipende dalla deformazione ma non dalle sue derivate, ad esempio dalla velocità come nel caso dei fluidi e dei corpi viscosi.
 \paragraph{Materiali iperelastici}
-Un materiale si dice iperelastico se esiste una funzione detta funzione energia  $\widehat{\mathbf{W}}$ tale che 
-$$\widehat{\mathbf{P}}(\mathbf{X},\mathbf{F}(\mathbf{X},t))=\rho_{\mathcal{B}}\frac{\partial \widehat{\mathbf{W}}}{\partial \mathbf{F}} $$
-\paragraph{\emph{Indipendenza dal sistema di riferimento}}
+Un materiale si dice iperelastico se esiste una funzione detta funzione energia $\widehat{\mathbf{W}}$ tale che 
+\begin{equation*}
+\widehat{\mathbf{P}}(\mathbf{X},\mathbf{F}(\mathbf{X},t))=\rho_{\mathcal{B}}\frac{\partial \widehat{\mathbf{W}}}{\partial \mathbf{F}}
+\end{equation*}
+\subparagraph{\emph{Indipendenza dal sistema di riferimento}}
 Le leggi costitutive del corpo in esame non devono dipendere dal particolare sistema di riferimento usato per descriverlo.
 In particolare sia $\mathbf{Q}$ una matrice ortogonale, allora 
 $$\mathbf{T}(\mathbf{X},\mathbf{F},\mathbf{N}) = \widehat{\mathbf{P}}(\mathbf{X},\mathbf{F})\mathbf{N} $$
@@ -746,6 +798,10 @@ $$\widehat{\mathbf{W}}(\mathbf{X},\mathbf{Q}\mathbf{F}) = \widehat{\mathbf{W}}(\
 e quindi
 $$\widehat{\mathbf{W}}(\mathbf{X},\mathbf{F}) = \widehat{\mathbf{W}}(\mathbf{X},\sqrt{\mathbf{C}}) $$
 L'indipendenza dal sistema di riferimento implica la conservazione momento angolare e la simmetria dei tensori di stress.
+Osserviamo inoltre per i materiali iperelastici vale
+\begin{equation*}
+\widehat{\mathbf{S}} = 2\rho_{\mathcal{B}}\frac{\partial\widehat{W}}{\partial\mathbf{C}}
+\end{equation*}
 \paragraph{Materiali isotropici}
 Un materiale è omogeneo se $\widehat{\mathbf{P}}$ non dipende esplicitamente da $\mathbf{X}$, cioè il comportamento del materiale non dipende dal punto del materiale in esame ma solo dalla sua deformazione.
 
@@ -808,33 +864,66 @@ che è l'equazione di Eulero per i fluidi perfetti comprimibili, che quindi sono
 Nei fluidi viscosi invece $\boldsymbol{\sigma}$ dipende non solo da $\mathbf{F}$ ma anche da $\Nabla\mathbf{v}$.
 [distinguere fluidi da solidi mediante gruppo di simmetria]
 \paragraph{Incomprimibilità}
-Un materiale è incomprimibile se...
-e quindi $J\equiv 1$ o $\Nabla\cdot\mathbf{v}=0$.
-Il moltiplicatore di Lagrange associato a questo vincolo
-$$\mathbf{P}(\mathbf{X},t)=-p\mathbf{F}^{-T}+\widehat{\mathbf{P}}(\mathbf{X},\mathbf{F}(\mathbf{X},t))$$.
+Un materiale è incomprimibile se $J\equiv 1$ o $\Nabla\cdot\mathbf{v}=0$.
+Aggiungendo all'espressione del primo tensore di Piola-Kirkhhoff moltiplicatore di Lagrange associato al vincolo di incomprimibilità si ottiene
+\begin{equation*}
+\mathbf{P}(\mathbf{X},t)=-p\mathbf{F}^{-T}+\widehat{\mathbf{P}}(\mathbf{X},\mathbf{F}(\mathbf{X},t))
+\end{equation*}
 
 Per $\widehat{\mathbf{P}}=0$  si ottiene l'equazione di Eulero per i fluidi perfetti incomprimibili
-$$\rho\frac{D \mathbf{v}}{Dt} = -\Nabla p+\rho\mathbf{b}$$
-$$\Nabla\cdot\mathbf{v}=0$$
+\begin{align*}
+&\rho\frac{D \mathbf{v}}{Dt} = -\Nabla p+\rho\mathbf{b} \\
+&\Nabla\cdot\mathbf{v}=0
+\end{align*}
+
 \paragraph{Materiali di Mooney-Rivlin}
+Un esempio solido eleastico non lineare è la gomma. Questa si comporta come un solido incompressibile, omogeneo, iperelastico e isotropico.
+La funzione che descrive l'energia accumulata da questo tipo di materiali è dovuta a Mooney (1940) e Rivlin (1948)
+\begin{multline*}
+\Phi(\lambda_1,\lambda_2,\lambda_3) = \alpha(\lambda_1^2+\lambda_2^2+\lambda_3^2-3) + \\ \beta((\lambda_2\lambda_3)^2+(\lambda_3\lambda_1)^2+(\lambda_1\lambda_2)^2 -3)
+\end{multline*}
+dove $\lambda_1,\lambda_2,\lambda_3$ sono gli stress principali, $\alpha$ e $\beta$ sono due costanti positive. 
+Si osservi che 
+\begin{equation*}
+\Phi(1,1,1) = 0
+\end{equation*}
+Un materiale si dice neo-Hookeano se $\beta=0$.
+Per i materiali comprimibili è possibile usare il modello di Hadamard
+\begin{equation*}
+\Phi(\lambda_1,\lambda_2,\lambda_3)\alpha(\lambda_1^2+\lambda_2^2+\lambda_3^2-3) + h(\lambda_1,\lambda_2,\lambda_3)
+\end{equation*}
+con $h(\delta)$ tale che
+\begin{align*}
+&h(\delta) \quad\text{ha un minimo in}\quad\delta=1 \\
+&h(\delta)\to\infty\qquad\delta\to 0\\
+&h(\delta)\to\infty\qquad\delta\to\infty\\
+\end{align*}
+
+In generale l'equazione costitutiva del materiale in esame deve essere desunta attraverso misurazioni empiriche.
 
 %Heltai
 
 \section{Teoria dell'elasticità strikes back}
 
-Un corpo si dice elastico se tende a ritornare nella sua configurazione originale ( o di equilibrio ) dopo essere stato deformato. Le particelle di un corpo elastico tendono a recuperare la loro posizione relativa rispetto alle altre particelle, mentre in un fluido il comportamento è stabilito solo dalla loro velocità relativa.
+Un corpo si dice elastico se tende a ritornare nella sua configurazione originale ( o di equilibrio ) dopo essere stato deformato. Le particelle di un corpo elastico tendono a recuperare la loro posizione relativa rispetto alle altre particelle, mentre in un fluido il comportamento è stabilito solo dalla loro velocità relativa ma non dalla loro posizione. I corpi elastici pur rispettando le stesse leggi di conservazione dei fluidi presentano diverse leggi costitutive che hanno l'effetto di mantenere invariata la posizione relativa delle particelle, per questo motivo le leggi costitutive dei materiali elastici sono date prevalentemente nel riferimento lagrangiano.
 
 \paragraph{Materiali iperelastici}
 
 Un materiale incomprimibile si dice iperelastico se è possibile definire una funzione di densità di energia potenziale
 
-$W( \mathbb{F},\mathbf{s}) > 0$
+\begin{equation*}
+W(\mathbb{F},\mathbf{s}) > 0
+\end{equation*}
 
 associata alla deformazione $\mathbb{F}$.
 
 Il comportamento di un materiale iperelastico dipende solo dalla sua configurazione attuale e non presenta fenomeni di isteresi.
 
-Sia $E [  \mathbf{X}(t) ] = \int_{\omega} W( \mathbb{F}, \mathbf{s} )) \, d\mathbf{s}$ l'energia potenziale totale del corpo.
+Sia 
+\begin{equation*}
+E [  \mathbf{X}(t) ] = \int_{\omega} W( \mathbb{F}, \mathbf{s} )) \, d\mathbf{s}
+\end{equation*}
+l'energia potenziale totale del corpo.
 
 Grazie ad alcune considerazione fisiche possiamo caratterizzare la funzione $W$:
 
@@ -842,85 +931,210 @@ Grazie ad alcune considerazione fisiche possiamo caratterizzare la funzione $W$:
 
 2. la densità di energia diverge a $+\infty$ quando il corpo viene compresso o espanso indefinitamente  
 
-$\vert \mathbb{F} \vert \rightarrow 0 \Rightarrow W(\mathbb{F}) \rightarrow +\infty$
+\begin{equation*}
+\vert \mathbb{F} \vert \rightarrow 0 \Rightarrow W(\mathbb{F}) \rightarrow +\infty
+\end{equation*}
 
-$\vert \mathbb{F} \vert \rightarrow +\infty \Rightarrow W(\mathbb{F}) \rightarrow +\infty$
+\begin{equation*}
+\vert \mathbb{F} \vert \rightarrow +\infty \Rightarrow W(\mathbb{F}) \rightarrow +\infty
+\end{equation*}
 
-3.  la densità di energia non varia in seguito a moti rigidi del corpo, cioè se $\mathbb{F}^*$ è ottenuta con un moto rigido da $\mathbb{F}$ allora $W(\mathbb{F}^*) = W(\mathbb{F})$.
+3.  la densità di energia non varia in seguito a moti rigidi del corpo, cioè se $\mathbb{F}^*$ è ottenuta con un moto rigido da $\mathbb{F}$ allora 
+\begin{equation*}
+W(\mathbb{F}^*) = W(\mathbb{F})
+\end{equation*}
 
-Sappiamo già [dove?] che $\mathbb{F}$ non cambia in seguito a traslazioni rigide, quindi possiamo scrivere
+Ricordando che $\mathbb{F}$ non cambia in seguito a traslazioni rigide, quindi possiamo scrivere
 
-$\mathbb{F}^* = R\mathbb{F}$ con $R$ rotazione tale che $RR^T = \mathbb{I}$ e $\Vert R \Vert > 0$.
+\begin{equation*}
+\mathbb{F}^* = R\mathbb{F}
+\end{equation*}
+con $R$ rotazione tale che 
+\begin{align*}
+&RR^T = \mathbb{I} \\
+&\Vert R \Vert > 0
+\end{align*}
 
-Ogni gradiente di deformazione $\mathbb{F}$ può essere scritto come il prodotto tra una rotazione e la sua componente puramente di deformazione $\mathbb{U}$ [non ha senso sta roba, o meglio non ne ha solo 1]. Quindi
+Ogni gradiente di deformazione $\mathbb{F}$ può essere decomposto nel prodotto tra una rotazione e il tensore simmetrico degli stress $\mathbb{U}$. Quindi
 
-$W(\mathbb{F}) = W(R\mathbb{U}) = W(\mathbb{U})$.
+\begin{equation*}
+W(\mathbb{F}) = W(R\mathbb{U}) = W(\mathbb{U})
+\end{equation*}
+
 
 Possiamo ora definire il tensore di Cauchy-Green e il tensore di Green
+\begin{equation*}
+\mathbb{C} = \mathbb{F}^T\mathbb{F} = \mathbb{U}^T\mathbb{U}
+\end{equation*}
+\begin{equation*}
+\mathbb{G} = \frac{1}{2}(\mathbb{C}-\mathbb{I})
+\end{equation*}
 
-$\mathbb{C} = \mathbb{F}^T\mathbb{F} = \mathbb{U}^T\mathbb{U}$
+che sono indipendenti da moti rigidi del corpo nel riferimento euleriano. Se inoltre il materiale è isotropico allora $W$ non dipende da rotazioni del corpo nel riferimento lagrangiano e può essere espresso come funzione degli invarianti di $\mathbb{C}$ ( o $\mathbb{G}$ )
+\begin{align*}
+&I_C = \traccia(\mathbb{C}) \\
+&II_C = \traccia(\mathbb{C}^2) \\
+&III_C = \det(\mathbb{C}) \\
+\end{align*}
 
-$\mathbb{G} = \frac{1}{2}(\mathbb{C}-\mathbb{I})$
+Esprimere il tensore degli stress di Cauchy $\boldsymbol(\sigma)$ in termini di $W$ a causa del fatto che sono definiti in due sistemi di riferimento differenti è in genere molto complicato.
+Per calcolare lo sforzo generato nel materiale è conveniente quindi introdurre i tensori di Piola-Kirchhoff, che ne sono la riscrittura in termini di coordinate lagrangiane
 
-che sono indipendenti da moti rigidi del corpo. [quindi W è più bella se definita in termini di questi due]
+Definiamo il primo tensore degli stress di Piola-Kirchhoff come
+\begin{equation*}
+(\mathbb{P}(\mathbf{s},t))_{\alpha,\beta} = \frac{\partial W}{\partial \mathbb{F}_{\alpha,\beta}} (\mathbf{s},t) =\left( \frac{\partial W}{\partial \mathbb{F}} (\mathbf{s},t)\right)_{\alpha,\beta}
+\end{equation*}
+e il secondo tensore degli stress di Piola-Kirchhoff come
+\begin{equation*}
+\mathbb{S}(\mathbf{s},t)=\frac{\partial W}{\partial\mathbb{G}}(\mathbf{s},t)=2\frac{\partial W}{\partial\mathbb{C}}(\mathbf{s},t)
+\end{equation*}
+Osserviamo che
+\begin{equation*}
+\mathbb{P}=\mathbb{F}\mathbb{S}
+\end{equation*}
+e che in genere $\mathbb{P}$ non è un tensore simmetrico mentre $\mathbb{S}$ è sempre un tensore simmetrico.
 
-Per calcolare lo sforzo generato nel materiale dai tensori è conveniente introdurre i tensori di Piola-Kirchhoff, che ne sono la riscrittura in termini di coordinate lagrangiane
+Il primo tensore di Piola-Kirchhoff rappresenta la forza per unità di area indeformata generata del materiale a causa della deformazione, il secondo tensore di Piola-Kirchhoff non ha invece una interpretazione fisica diretta.
 
-$(\mathbb{P}(\mathbf{s},t))_{\alpha,\beta} = \frac{\partial W}{\partial \mathbb{F}_{\alpha,\beta}} (\mathbf{s},t) =( \frac{\partial W}{\partial \mathbb{F}} (\mathbf{s},t))_{\alpha,\beta}$
+Possiamo scrivere la relazione tra il tensore di Cauchy il primo tensore di Piola-Kirchhoff come
+\begin{equation*}
+\int_{\partial\mathcal{P}_t} \boldsymbol{\sigma}\mathbf{n} \, da = \int_{\partial\mathcal{P}} \mathbb{P}\mathbf{N} \, dA
+\end{equation*}
+la relazione puntuale tra i due è data da
+\begin{equation*}
+\mathbb{P}(\mathbf{s},t) = \vert \mathbb{F}(\mathbf{s},t) \vert \mathbf{\sigma}(\mathbf{X}(\mathbf{s},t),t) \mathbb{F}^{-T}(\mathbf{s},t)
+\end{equation*}
 
-$\mathbb{S}(\mathbf{s},t)=\frac{\partial W}{\partial\mathbb{G}}(\mathbf{s},t)=2\frac{\partial W}{\partial\mathbb{C}}(\mathbf{s},t)$
-
-[]
-
-$\int_{\partial\mathcal{P}_t} \mathbf{\sigma}\mathbf{n} \, dA = \int_{\partial\mathcal{P}} \mathbb{P}\mathbf{N} \, dA$
-
-$\mathbb{P}(\mathbf{s},t) = \vert \mathbb{F}(\mathbf{s},t) \vert \mathbf{\sigma}(\mathbf{X}(\mathbf{s},t),t) \mathbb{F}^{-T}(\mathbf{s},t)$
-
-
-Possiamo scrivere la legge di conservazione del momento in termini del primo tensore di P.K.
-
-$M\frac{\partial^2\mathbf{X}}{\partial t^2} = \Nabla_\mathbf{s} \cdot \mathbb{P} + \mathbf{B}$
-
+Possiamo scrivere la legge di conservazione del momento in termini del primo tensore di Piola-Kirhhoff
+\begin{equation*}
+M\frac{\partial^2\mathbf{X}}{\partial t^2} = \Nabla_\mathbf{s} \cdot \mathbb{P} + \mathbf{B}
+\end{equation*}
 con 
-
-$(\Nabla_\mathbf{s} \cdot \mathbb{P} )_{\alpha} = \frac{\partial\mathbb{P}_{\alpha,\beta}}{\partial s_\beta}$
+\begin{equation*}
+(\Nabla_\mathbf{s} \cdot \mathbb{P} )_{\alpha} = \sum_{\beta}\frac{\partial\mathbb{P}_{\alpha,\beta}}{\partial s_\beta}
+\end{equation*}
+e
+\begin{equation*}
+\mathbf{B}(\mathbf{s},t)=\vert\mathbb{F}(\mathbf{s},t)\vert\mathbf{b}(\mathbf{X}(\mathbf{s},t))
+\end{equation*}
 
 \paragraph{Incomprimibilità}
 
-Come già visto prima $\vert \mathbb{F} \vert = 1$.
+Il vincolo di incomprimibilità nel riferimento lagrangiano si può esprimere come
 
-[questo crea un casino e bisogna aggiungere un moltiplicatore di Lagrange associato alla condizione di incomprimibilità nell'equazione della pressione idrostatica wut?]
+\begin{equation*}
+\frac{d}{dt}\int_{\mathcal{P}_t}\,d\mathbf{x} = \int_{\mathcal{P}}\frac{\partial}{\partial t}\vert\mathbb{F}\vert\,d\mathbf{s} = 0
+\end{equation*}
+che equivale a chiedere che $\vert\mathbb{F}\vert$ rimanga costante nel tempo, e quindi senza perdità di generalità si può assumere che 
+\begin{equation*}
+\vert \mathbb{F} \vert = 1
+\end{equation*}
 
-[modello neohookeano]
+L'aggiunta del vincolo di incomprimibilità rende necessario correggere la funzione densità di energia
 
-\paragraph{Materiali viscoelastici}
+\begin{equation*}
+W^{\text{inc}}(\mathbb{F}) = W(\mathbb{F})-P(\vert\mathbb{F}\vert - 1)
+\end{equation*}
+dove $P$ è il moltiplicatore di Lagrange associato alla condizione $\mathbb{F}\vert=1$.
+
+Possiamo così calcolare il primo tensore di Piola-Kirchhoff
+\begin{equation*}
+\mathbb{P}^{\text{inc}}=\frac{\partial W}{\partial t}-\vert\mathbb{F}\vert P\mathbb{F}^{-t}
+\end{equation*}
+
+$P$ rappresenta l'equivalente della pressione idrostatica $p$ presente in coordinate euleriane nelle equazioni di Navier-Stokes.
+
+Un esempio di corpo elastico è rappresentato dal modello neo-Hookiano in cui la legge costitutiva è data da
+\begin{equation*}
+W = \frac{1}{2}\mu(\traccia(\mathbb{C})-d)-\mu\ln(\vert\mathbb{F}\vert)+\frac{1}{2}\lambda\ln(\vert\mathbb{F}\vert)^2
+\end{equation*}
+Usando questa legge costituitiva il primo tensore di Piola-Kirchhoff è dato da
+\begin{equation*}
+\mathbb{P} = \mu(\mathbb{F}-\mathbb{F}^{-T})+\lambda\ln(\vert\mathbb{F}\vert)\mathbb{F}^{-T}
+\end{equation*}
+Osserviamo che nel caso di materiali incomprimibili ( per cui $\ln(\vert\mathbb{F}\vert)=0$ ) $\mathbb{P}$ è lineare.
 
 \subsection{Equazioni in forma forte}
 
-Sia $\mathcal{B} \subseteq \Re^3$ una regione poligonale convessa sulla cui superficie $\partial\mathcal{B}$ è applicata una forza con densità per superficie $\mathbf{T}$.
+Sia $\mathcal{B} \subseteq \mathbb{R}^3$ una regione poligonale convessa sulla cui superficie $\partial\mathcal{B}$ è applicata una forza la cui densità di forza per superficie è indicata con $\mathbf{T}$.
 
 Dati $\mathbf{X}_0$, $\mathbf{X}^{'}_0$ e $\mathbf{T}$ trovare $\mathbf{X}$ e $P$ tali che:
-$$\frac{\partial^2\mathbf{X}}{\partial t^2} = \Nabla_\mathbf{s} \cdot \mathbb{P}$$
-$$\mathbb{P} = \frac{\partial W}{\partial\mathbb{F}} - \vert\mathbb{F}\vert P\mathbb{F}^{-T} + \eta\vert\mathbb{F}\vert \frac{\partial}{\partial t}(\mathbb{F}\mathbb{F}^{-T} + (\mathbb{F}\mathbb{F}^{-T})^T)\mathbb{F}^{-T}$$
-$$\vert\mathbb{F}\vert=1$$
-$$\mathbf{X}(\mathbf{s},0)=\mathbf{X}_0(s)$$
-$$\frac{\partial \mathbf{X}}{\partial t}(\mathbf{s},0)=\mathbf{X}^{'}_0(\mathbf{s})$$
-$$\mathbb{P}\mathbf{N}=-\mathbf{T}$$
+\begin{align*}
+&M\frac{\partial^2\mathbf{X}}{\partial t^2} = \Nabla_\mathbf{s} \cdot \mathbb{P} &\qquad \forall(\mathbf{s},t)\in\mathcal{B}\times(0,T)\\
+&\mathbb{P} = \frac{\partial W}{\partial\mathbb{F}} - \vert\mathbb{F}\vert P\mathbb{F}^{-T} + \eta\vert\mathbb{F}\vert \frac{\partial}{\partial t}(\mathbb{F}\mathbb{F}^{-T} + (\mathbb{F}\mathbb{F}^{-T})^T)\mathbb{F}^{-T}&\qquad \forall(\mathbf{s},t)\in\mathcal{B}\times(0,T)\\\
+&\vert\mathbb{F}\vert =1&\qquad \forall(\mathbf{s},t)\in\mathcal{B}\times(0,T)\\\
+&\mathbf{X}(\mathbf{s},0)=\mathbf{X}_0(s)&\qquad \forall\mathbf{s}\in\mathcal{B}\\\
+&\frac{\partial \mathbf{X}}{\partial t}(\mathbf{s},0)=\mathbf{X}^{'}_0(\mathbf{s})&\qquad \forall\mathbf{s}\in\mathcal{B}\\
+&\mathbb{P}\mathbf{N}=-\mathbf{T}&\qquad \forall(\mathbf{s},t)\in\partial\mathcal{B}\times(0,T)
+\end{align*}
+
+$\mathbf{T}$ rappresenta la trazione esterna applicata sulla superficie di $\mathcal{B}$, compensata dalla reazione del materiale.
+
+Il problema può essere semplificato trattando la costante di incomprimibilità attraverso metodi di penalizzazione e linearizzando il termine viscoso o trattandolo nel riferimento euleriano.
 
 \subsection{Equazioni in forma debole}
 
-Sia $S = \{ \mathbf{X} \in H^1(\mathcal{B})^d \cap W^{1,\infty}(\mathcal{B})^d \quad \texttt{t.c.} \quad \vert \boldsymbol {\nabla}_{\mathbf{s}}\mathbf{X}\vert = \vert \mathbb{F} \vert > 0, \mathbf{X}(\mathcal{B}) \subseteq \Omega \}$ lo spazio delle configurazioni ammesse e $P = L^2(\mathcal{B})^d$
+Sia
+\begin{equation*}
+S = \{ \mathbf{X} \in H^1(\mathcal{B})^d \cap W^{1,\infty}(\mathcal{B})^d \quad \texttt{t.c.} \quad \vert \boldsymbol {\nabla}_{\mathbf{s}}\mathbf{X}\vert = \vert \mathbb{F} \vert > 0, \mathbf{X}(\mathcal{B}) \subseteq \Omega \}
+\end{equation*}
+il sottospazio di $H^1(\mathcal{B}^d)$ che contiene le sole configurazioni ammesse del materiale e
+\begin{equation*}
+\mathbf{P} = L^2(\mathcal{B})^{d\times d}
+\end{equation*}
+lo spazio dei gradienti di $H^1(\mathcal{B}^d)$.
 
-Dati $\mathbf{T} \in H^{-\frac{1}{2}}(\partial\mathcal{B}^d$ e $\mathbf{X}_0,\mathbf{X}^{'}_0 \in S$ per ogni $t \in ]0,t[$ trovare $\mathbf{X}(t) \in S$ tale che 
-$$\frac{d^2}{dt^2} < \mathbf{X}(t), \mathbf{Y} > + < \mathbb{P}(\mathbb{F}(t)), \Nabla_\mathbf{s} \mathbf{Y} = -\int_{\partial\mathcal{B}}\mathbf{T}(t)\cdot\mathbf{Y}\,dA$$
-$$\mathbf{X}(\mathbf{s},0)=\mathbf{X}_0(\mathbf{s})$$
-$$\frac{\partial\mathbf{X}}{\partial t}(\mathbf{s},0)=\mathbf{X}^{'}_0(\mathbf{s})$$
+Dati $\mathbf{T} \in H^{-\frac{1}{2}}(\partial\mathcal{B})^d$ e $\mathbf{X}_0,\mathbf{X}^{'}_0 \in S$ per ogni $t \in (0,t)$ trovare $\mathbf{X}(t) \in S$ tale che 
+\begin{align*}
+&\frac{d^2}{dt^2}\ps{\mathbf{X}(t)}{\mathbf{Y}} + \ps{\mathbb{P}(\mathbb{F}(t))}{\Nabla_\mathbf{s} \mathbf{Y}} = -\int_{\partial\mathcal{B}}\mathbf{T}(t)\cdot\mathbf{Y}\,dA\qquad&\forall\mathbf{Y}\in H^1(\mathcal{B}^d)\\
+&\mathbf{X}(\mathbf{s},0)=\mathbf{X}_0(\mathbf{s})\qquad&\forall\mathbf{s}\in\mathcal{B}\\
+&\frac{\partial\mathbf{X}}{\partial t}(\mathbf{s},0)=\mathbf{X}^{'}_0(\mathbf{s})&\forall\mathbf{s}\in\mathcal{B}
+\end{align*}
 
-Le equazioni possono essere scritte in termini di operatori come fatto per le equazioni di N.S.
+Le equazioni possono essere scritte in termini di operatori come fatto per le equazioni di Navier-Stokes.
+Definiamo i seguenti operatori
+\begin{align*}
+&\ps{M\mathbf{X}}{\mathbf{Y}}=\ps{\mathbf{X}}{\mathbf{Y}}\qquad&\forall\mathbf{X},\mathbf{Y}\in H^1(\mathcal{B}^d) \\
+&\ps{D\mathbf{Y}}{\mathbb{S}}=\ps{D^T\mathbb{S}}{\mathbf{Y}}=\ps{\mathbb{S}}{\Nabla_{\mathbf{s}}\mathbf{Y}}\qquad&\forall\mathbf{Y}\in H^1(\mathcal{B}^d),\mathbb{S}\in\mathbb{P}\\
+&\ps{\gamma_{\mathcal{B}}\mathbf{T}}{\mathbf{Y}}=\int_{\partial \mathcal{B}}\mathbf{T}\cdot\mathbf{Y}\,d\mathbf{A}\qquad&\forall\mathbf{T}\in L^2(\mathcal{B})^d,\mathbf{Y}\in H^1(\mathcal{B}^d) \\
+\end{align*}
+allora il problema può essere riscritto come
+\begin{align*}
+&M\frac{\partial^2 \mathbf{X}}{\partial t^2}(t)+D^T\mathbb{P}(\mathbb{F}(t))=-\gamma_{\mathcal{B}}\mathbf{T}
+\qquad&H^1(\mathcal{B}^d) \\
+&\mathbf{X}(\mathbf{s},0)=\mathbf{X}_0(\mathbf{s})\qquad&\forall\mathbf{s}\in\mathcal{B}\\
+&\frac{\partial\mathbf{X}}{\partial t}(\mathbf{s},0)=\mathbf{X}^{'}_0(\mathbf{s})&\forall\mathbf{s}\in\mathcal{B}
+\end{align*}
+La prima equazione del problema può essere separata in due equazioni del primo ordine
+\begin{align*}
+&M\frac{\partial \mathbf{U}}{\partial t}(t)+D^T\mathbb{P}(\mathbb{F}(t))=-\gamma_{\mathcal{B}}\mathbf{T}
+\qquad&H^1(\mathcal{B}^d) \\
+&M\frac{\partial \mathbf{X}}{\partial t}(t)-M\mathbf{U}(t)=0
+\qquad&H^1(\mathcal{B}^d) \\
+&\mathbf{X}(\mathbf{s},0)=\mathbf{X}_0(\mathbf{s})\qquad&\forall\mathbf{s}\in\mathcal{B}\\
+&\mathbf{U}(\mathbf{s},0)=\mathbf{X}^{'}_0(\mathbf{s})&\forall\mathbf{s}\in\mathcal{B}
+\end{align*}
+dove
+\begin{equation*}
+\mathbf{U}(t) = \frac{\partial \mathbf{X}}{\partial t}(t)
+\end{equation*}
+è la velocità materiale.
 
 \paragraph{Stima dell'energia}
 
-Presi $\mathbf{B}=0$ e $\mathbf{T}=0$ nelle equazioni allora
-$$\frac{1}{2}\frac{d}{dt}\Vert\mathbf{U}(t)\Vert^2_{0,\mathcal{B}}+\frac{d}{dt}E[\mathbf{X}(t)]=0$$
-[prendendo $\mathbf{Y}=\mathbf{U}$ nelle equazioni].
-
+Per $t\in (0,T)$ sia $\mathbf{X}(t)$ la soluzione del problema con $\mathbf{B}=0$ e $\mathbf{T}=0$ allora
+\begin{equation*}
+\frac{1}{2}\frac{d}{dt}\Vert\mathbf{U}(t)\Vert^2_{0,\mathcal{B}}+\frac{d}{dt}E[\mathbf{X}(t)]=0
+\end{equation*}
+\begin{proof}
+Scegliendo
+\begin{equation*}
+\mathbf{Y}=\frac{\partial \mathbf{X}}{\partial t}=\mathbf{U}
+\end{equation*}
+allora l'equazione diventa
+\begin{equation*}
+\frac{1}{2}\frac{d}{dt}\ps{\frac{\partial\mathbf{X}}{\partial t}}{\frac{\partial \mathbf{X}}{\partial t}} + \ps{\mathbb{P}(\mathbb{F}(t))}{\frac{\partial}{\partial t} \Nabla_\mathbf{s} \mathbf{X}} = 0
+\end{equation*}
+\begin{equation*}
+\frac{1}{2}\frac{d}{dt}\Vert\mathbf{U}\Vert^2 +\int\frac{\partial}{\partial t}\mathbb{W}\end{equation*}
+\end{proof}
