@@ -738,6 +738,10 @@ Anche per i materiali elastici valgono le leggi di conservazione della massa e d
 \rho\frac{d\mathbf{u}}{dt} = \Nabla\cdot \boldsymbol{\sigma} + \rho\mathbf{b}
 \end{equation*}
 
+%
+Un corpo si dice elastico se tende a ritornare nella sua configurazione originale ( o di equilibrio ) dopo essere stato deformato. Le particelle di un corpo elastico tendono a recuperare la loro posizione relativa rispetto alle altre particelle, mentre in un fluido il comportamento è stabilito solo dalla loro velocità relativa ma non dalla loro posizione. I corpi elastici pur rispettando le stesse leggi di conservazione dei fluidi presentano diverse leggi costitutive che hanno l'effetto di mantenere invariata la posizione relativa delle particelle, per questo motivo le leggi costitutive dei materiali elastici sono date prevalentemente nel riferimento lagrangiano.
+%
+
 \subparagraph{In coordinate lagrangiane}
 \'E possibile esprimere il tensore di Cauchy in coordinate lagrangiane sfruttando le quantità materiali al posto di quelle spaziali, ottenendo così i vettori degli stress di Piola-Kirchhoff.
 Il primo vettore di stress di Piola-Kirchhoff $\mathbf{T}(\mathbf{s},t,\mathbf{n})$ è un vettore parallelo al vettore di stress di Cauchy $\mathbf{t}(\mathbf{x},t,\mathbf{n})$, ma misura la forza per unità di area non deformata,
@@ -844,69 +848,8 @@ Se il materiale è omogeneo allora i valori di $c_{ijkl}$ sono costanti in tutto
 $$\rho_{\mathcal{B}} \frac{\partial^2\mathbf{u}^i}{\partial t^2} = \frac{\partial^2\mathbf{u}^k}{\partial\mathbf{X}^j\partial\mathbf{X}^l}$$.
 Se il materiale è omogeneo e isotropico allora esistono due costani $\lambda$ e $\mu$ dette moduli di Lamè per cui
 $$c_{ijkl}=\lambda\delta_{ij}\delta_{kl}+\mu(\delta_{ik}\delta_{jl}+\delta_{il}\delta_{jk})$$.
-\paragraph{Un fluido elastico}
-Si consideri un corpo non lineare iperelastico per cui
-$$\widehat{W}(\mathbf{F}) = h(|\mathbf{F}|)$$.
-Allora è omogeneo, indipendente dal sistema di riferimento e isotropico e il primo tensore di Piola-Kirchhoff vale
-$$\widehat{\mathbf{P}}=\rho_{\mathcal{B}}\frac{\partial \widehat{W}}{\partial \mathbf{F}} = \rho_{\mathcal{B}}h'(J)\frac{\partial \mathbf{J}}{\partial \mathbf{F}}$$
-con $J = |\mathbf{F}|$.
-Osservato che 
-$$\frac{\partial J}{\partial \mathbf{F}} = J\mathbf{F}^{-T}$$
-allora il tensore di stress di Cauchy vale
-$$\boldsymbol{\sigma}=(\frac{1}{J})\widehat{\mathbf{P}}\mathbf{F}^{T}=\rho_{\mathcal{B}}h'(J)\mathbf{I}$$.
-Dato che
-$$p(\rho)=-\rho_{\mathcal{B}}h'(J)$$
-allora
-$$\boldsymbol{\sigma}=-p(\rho)\mathbf{I}$$.
-L'equazione del moto di Cauchy diventa
-$$\rho\frac{D \mathbf{u}}{Dt} = -\Nabla p+\rho\mathbf{b}$$
-che è l'equazione di Eulero per i fluidi perfetti comprimibili, che quindi sono un sottoinsieme dei materiali elastici.
-Nei fluidi viscosi invece $\boldsymbol{\sigma}$ dipende non solo da $\mathbf{F}$ ma anche da $\Nabla\mathbf{v}$.
-[distinguere fluidi da solidi mediante gruppo di simmetria]
-\paragraph{Incomprimibilità}
-Un materiale è incomprimibile se $J\equiv 1$ o $\Nabla\cdot\mathbf{v}=0$.
-Aggiungendo all'espressione del primo tensore di Piola-Kirkhhoff moltiplicatore di Lagrange associato al vincolo di incomprimibilità si ottiene
-\begin{equation*}
-\mathbf{P}(\mathbf{X},t)=-p\mathbf{F}^{-T}+\widehat{\mathbf{P}}(\mathbf{X},\mathbf{F}(\mathbf{X},t))
-\end{equation*}
 
-Per $\widehat{\mathbf{P}}=0$  si ottiene l'equazione di Eulero per i fluidi perfetti incomprimibili
-\begin{align*}
-&\rho\frac{D \mathbf{v}}{Dt} = -\Nabla p+\rho\mathbf{b} \\
-&\Nabla\cdot\mathbf{v}=0
-\end{align*}
-
-\paragraph{Materiali di Mooney-Rivlin}
-Un esempio solido eleastico non lineare è la gomma. Questa si comporta come un solido incompressibile, omogeneo, iperelastico e isotropico.
-La funzione che descrive l'energia accumulata da questo tipo di materiali è dovuta a Mooney (1940) e Rivlin (1948)
-\begin{multline*}
-\Phi(\lambda_1,\lambda_2,\lambda_3) = \alpha(\lambda_1^2+\lambda_2^2+\lambda_3^2-3) + \\ \beta((\lambda_2\lambda_3)^2+(\lambda_3\lambda_1)^2+(\lambda_1\lambda_2)^2 -3)
-\end{multline*}
-dove $\lambda_1,\lambda_2,\lambda_3$ sono gli stress principali, $\alpha$ e $\beta$ sono due costanti positive. 
-Si osservi che 
-\begin{equation*}
-\Phi(1,1,1) = 0
-\end{equation*}
-Un materiale si dice neo-Hookeano se $\beta=0$.
-Per i materiali comprimibili è possibile usare il modello di Hadamard
-\begin{equation*}
-\Phi(\lambda_1,\lambda_2,\lambda_3)\alpha(\lambda_1^2+\lambda_2^2+\lambda_3^2-3) + h(\lambda_1,\lambda_2,\lambda_3)
-\end{equation*}
-con $h(\delta)$ tale che
-\begin{align*}
-&h(\delta) \quad\text{ha un minimo in}\quad\delta=1 \\
-&h(\delta)\to\infty\qquad\delta\to 0\\
-&h(\delta)\to\infty\qquad\delta\to\infty\\
-\end{align*}
-
-In generale l'equazione costitutiva del materiale in esame deve essere desunta attraverso misurazioni empiriche.
-
-%Heltai
-
-\section{Teoria dell'elasticità strikes back}
-
-Un corpo si dice elastico se tende a ritornare nella sua configurazione originale ( o di equilibrio ) dopo essere stato deformato. Le particelle di un corpo elastico tendono a recuperare la loro posizione relativa rispetto alle altre particelle, mentre in un fluido il comportamento è stabilito solo dalla loro velocità relativa ma non dalla loro posizione. I corpi elastici pur rispettando le stesse leggi di conservazione dei fluidi presentano diverse leggi costitutive che hanno l'effetto di mantenere invariata la posizione relativa delle particelle, per questo motivo le leggi costitutive dei materiali elastici sono date prevalentemente nel riferimento lagrangiano.
-
+%
 \paragraph{Materiali iperelastici}
 
 Un materiale incomprimibile si dice iperelastico se è possibile definire una funzione di densità di energia potenziale
@@ -1017,7 +960,41 @@ e
 \begin{equation*}
 \mathbf{B}(\mathbf{s},t)=\vert\mathbb{F}(\mathbf{s},t)\vert\mathbf{b}(\mathbf{X}(\mathbf{s},t))
 \end{equation*}
+%
 
+\paragraph{Un fluido elastico}
+Si consideri un corpo non lineare iperelastico per cui
+$$\widehat{W}(\mathbf{F}) = h(|\mathbf{F}|)$$.
+Allora è omogeneo, indipendente dal sistema di riferimento e isotropico e il primo tensore di Piola-Kirchhoff vale
+$$\widehat{\mathbf{P}}=\rho_{\mathcal{B}}\frac{\partial \widehat{W}}{\partial \mathbf{F}} = \rho_{\mathcal{B}}h'(J)\frac{\partial \mathbf{J}}{\partial \mathbf{F}}$$
+con $J = |\mathbf{F}|$.
+Osservato che 
+$$\frac{\partial J}{\partial \mathbf{F}} = J\mathbf{F}^{-T}$$
+allora il tensore di stress di Cauchy vale
+$$\boldsymbol{\sigma}=(\frac{1}{J})\widehat{\mathbf{P}}\mathbf{F}^{T}=\rho_{\mathcal{B}}h'(J)\mathbf{I}$$.
+Dato che
+$$p(\rho)=-\rho_{\mathcal{B}}h'(J)$$
+allora
+$$\boldsymbol{\sigma}=-p(\rho)\mathbf{I}$$.
+L'equazione del moto di Cauchy diventa
+$$\rho\frac{D \mathbf{u}}{Dt} = -\Nabla p+\rho\mathbf{b}$$
+che è l'equazione di Eulero per i fluidi perfetti comprimibili, che quindi sono un sottoinsieme dei materiali elastici.
+Nei fluidi viscosi invece $\boldsymbol{\sigma}$ dipende non solo da $\mathbf{F}$ ma anche da $\Nabla\mathbf{v}$.
+[distinguere fluidi da solidi mediante gruppo di simmetria]
+\paragraph{Incomprimibilità}
+Un materiale è incomprimibile se $J\equiv 1$ o $\Nabla\cdot\mathbf{v}=0$.
+Aggiungendo all'espressione del primo tensore di Piola-Kirkhhoff moltiplicatore di Lagrange associato al vincolo di incomprimibilità si ottiene
+\begin{equation*}
+\mathbf{P}(\mathbf{X},t)=-p\mathbf{F}^{-T}+\widehat{\mathbf{P}}(\mathbf{X},\mathbf{F}(\mathbf{X},t))
+\end{equation*}
+
+Per $\widehat{\mathbf{P}}=0$  si ottiene l'equazione di Eulero per i fluidi perfetti incomprimibili
+\begin{align*}
+&\rho\frac{D \mathbf{v}}{Dt} = -\Nabla p+\rho\mathbf{b} \\
+&\Nabla\cdot\mathbf{v}=0
+\end{align*}
+
+%
 \paragraph{Incomprimibilità}
 
 Il vincolo di incomprimibilità nel riferimento lagrangiano si può esprimere come
@@ -1053,6 +1030,34 @@ Usando questa legge costituitiva il primo tensore di Piola-Kirchhoff è dato da
 \mathbb{P} = \mu(\mathbb{F}-\mathbb{F}^{-T})+\lambda\ln(\vert\mathbb{F}\vert)\mathbb{F}^{-T}
 \end{equation*}
 Osserviamo che nel caso di materiali incomprimibili ( per cui $\ln(\vert\mathbb{F}\vert)=0$ ) $\mathbb{P}$ è lineare.
+%
+
+\paragraph{Materiali di Mooney-Rivlin}
+Un esempio solido eleastico non lineare è la gomma. Questa si comporta come un solido incompressibile, omogeneo, iperelastico e isotropico.
+La funzione che descrive l'energia accumulata da questo tipo di materiali è dovuta a Mooney (1940) e Rivlin (1948)
+\begin{multline*}
+\Phi(\lambda_1,\lambda_2,\lambda_3) = \alpha(\lambda_1^2+\lambda_2^2+\lambda_3^2-3) + \\ \beta((\lambda_2\lambda_3)^2+(\lambda_3\lambda_1)^2+(\lambda_1\lambda_2)^2 -3)
+\end{multline*}
+dove $\lambda_1,\lambda_2,\lambda_3$ sono gli stress principali, $\alpha$ e $\beta$ sono due costanti positive. 
+Si osservi che 
+\begin{equation*}
+\Phi(1,1,1) = 0
+\end{equation*}
+Un materiale si dice neo-Hookeano se $\beta=0$.
+Per i materiali comprimibili è possibile usare il modello di Hadamard
+\begin{equation*}
+\Phi(\lambda_1,\lambda_2,\lambda_3)\alpha(\lambda_1^2+\lambda_2^2+\lambda_3^2-3) + h(\lambda_1,\lambda_2,\lambda_3)
+\end{equation*}
+con $h(\delta)$ tale che
+\begin{align*}
+&h(\delta) \quad\text{ha un minimo in}\quad\delta=1 \\
+&h(\delta)\to\infty\qquad\delta\to 0\\
+&h(\delta)\to\infty\qquad\delta\to\infty\\
+\end{align*}
+
+In generale l'equazione costitutiva del materiale in esame deve essere desunta attraverso misurazioni empiriche.
+
+%Heltai
 
 \subsection{Equazioni in forma forte}
 
