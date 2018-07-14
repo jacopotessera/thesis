@@ -729,17 +729,21 @@ Il teorema afferma che la variazione di energia cinetica è pari all'energia dis
 I fluidi governati dalle equazioni di Navier-Stokes incomprimibili non possono accumulare energia se non sottoforma di energia cinetica dato che il fluido è incomprimibile e lo stress $\boldsymbol{\sigma}$ non dipende dalla deformazione del fluido. 
 
 \section{Teoria matematica dell'elasticità}
-%Marsden Mathematical Foundation of Elasticity
-La caratteristica dei materiali elastici, a differenza dei fluidi, è quella di tendera a ritornare nella proprio posizione di equilibrio, cioè la configurazione che minimizza una data funzione energia dipendente dalla configurazione e specifica per il materiale, detta configurazione di riferimento o configurazione di equilibrio, che rappresenta lo stato non deformato del materiale. Questa posizione e la traiettoria seguita dai punti del corpo per raggiungerla dipende dalla natura del materiale elastico e in definitiva dalla sua legge costitutiva.
 
-Anche per i materiali elastici valgono le leggi di conservazione della massa e del momento, e quindi dati la densità del materiale $\rho$, il tensore degli stress di Cauchy $\boldsymbol{\sigma}$ e la forza esterna $\mathbf{b}$ sarà ancora valida l'equazione del moto di Cauchy
+Un materiale si dice elastico se tende a ritornare nella sua configurazione originale ( detta configurazione di equilibrio o configurazione di riferimento ), che rappresenta il suo stato non deformato, dopo aver subito una deformazione. Le particelle dei materiali elastici tendono a recuperare la loro posizione relativa rispetto alle altre particelle, a differenza dei fluidi, in cui il comportamente delle particelle che lo costituiscono dipende solo dalla loro velocità relativa ma non dalla loro posizione. I corpi elastici, pur rispettando le stesse leggi di conservazione dei fluidi, che rappresentano principi fisici universali, sono soggetti a diverse leggi costitutive che descrivono gli effetti delle deformazioni sugli stress interni e determinano la configurazione di equilibrio e la traiettoria che le particelle devono seguire per raggiungerla.
+
+Essendo centrale nello studio del comportamento dei corpi elastici la posizione relativa delle particelle le leggi costitutive sono in genere esplicitate prevalentemente nel riferimento lagrangiano.
+
+Dato che anche per i materiali elastici valgono le leggi di conservazione della massa e del momento, e quindi dati la densità del materiale $\rho$, il tensore degli stress di Cauchy $\boldsymbol{\sigma}$ e la forza esterna $\mathbf{b}$ sarà ancora valida l'equazione del moto di Cauchy
 
 \begin{equation*}
 \rho\frac{d\mathbf{u}}{dt} = \Nabla\cdot \boldsymbol{\sigma} + \rho\mathbf{b}
 \end{equation*}
 
+%Marsden Mathematical Foundation of Elasticity
+%La caratteristica dei materiali elastici, a differenza dei fluidi, è quella di tendera a ritornare nella proprio posizione di equilibrio, cioè la configurazione che minimizza una data funzione energia dipendente dalla configurazione e specifica per il materiale, detta configurazione di riferimento o configurazione di equilibrio, che rappresenta lo stato non deformato del materiale. Questa posizione e la traiettoria seguita dai punti del corpo per raggiungerla dipende dalla natura del materiale elastico e in definitiva dalla sua legge costitutiva.
 %
-Un corpo si dice elastico se tende a ritornare nella sua configurazione originale ( o di equilibrio ) dopo essere stato deformato. Le particelle di un corpo elastico tendono a recuperare la loro posizione relativa rispetto alle altre particelle, mentre in un fluido il comportamento è stabilito solo dalla loro velocità relativa ma non dalla loro posizione. I corpi elastici pur rispettando le stesse leggi di conservazione dei fluidi presentano diverse leggi costitutive che hanno l'effetto di mantenere invariata la posizione relativa delle particelle, per questo motivo le leggi costitutive dei materiali elastici sono date prevalentemente nel riferimento lagrangiano.
+%Un corpo si dice elastico se tende a ritornare nella sua configurazione originale ( o di equilibrio ) dopo essere stato deformato. Le particelle di un corpo elastico tendono a recuperare la loro posizione relativa rispetto alle altre particelle, mentre in un fluido il comportamento è stabilito solo dalla loro velocità relativa ma non dalla loro posizione. I corpi elastici pur rispettando le stesse leggi di conservazione dei fluidi presentano diverse leggi costitutive che hanno l'effetto di mantenere invariata la posizione relativa delle particelle, per questo motivo le leggi costitutive dei materiali elastici sono date prevalentemente nel riferimento lagrangiano.
 %
 
 \subparagraph{In coordinate lagrangiane}
@@ -823,31 +827,6 @@ $$\mathbf{S}=\alpha_0\mathbf{I}+\alpha_1\mathbf{C}+\alpha_2\mathbf{C}^2 $$
 e
 $$\boldsymbol{\sigma}=\beta_0\mathbf{I}+\beta_1\mathbf{b}+\beta_2\mathbf{b}^2 $$
 con $\alpha_i$ e $\beta_i$ funzioni scalari degli invarianti di $\mathbf{C}$  e di $\mathbf{b}$.
-\paragraph{Elasticità lineare}
-Quando il corpo in esame è soggetto solo a piccoli spostamenti e a piccole deformazioni è possibile ottenere una teoria semplificata linearizzando le equazioni non lineari del moto.
-
-Sia $\widehat{\mathbf{P}}$ la funzione costitutiva di un materiale elastico omogeneo non lineare tale che $\widehat{\mathbf{P}}(\mathbf{I})=0$, cioè la configurazione di riferimento ha stress nullo.
-Sia $\phi_\epsilon(\mathbf{X},t)$ una famiglia di moti dipendenti dal parametro $\epsilon \ll1$ tale che $\phi_0(\mathbf{X},t) = \mathbf{X}$. Quindi $\phi_0$ soddisfa le equazioni del moto
-$$\rho_\mathcal{B}\frac{\partial \mathbf{V}}{\partial t} = \Nabla\cdot\widehat{\mathbf{P}}(\mathbf{F}) $$.
-Si supponga che anche $\phi_\epsilon$ soddisfi la stessa equazione per ogni $\epsilon$.
-Sia 
-$$\phi_\epsilon(\mathbf{X},t) = \mathbf{X}+\epsilon\mathbf{u}(\mathbf{X},t) + \mathcal{O}(\epsilon^2)$$
-l'espansione in serie di $\phi_\epsilon$.
-Il problema di riduce a trovare $\mathbf{u}$.
-Osservato che 
-$$\mathbf{u}=\frac{\partial}{\partial \epsilon}\phi_\epsilon \big|_{\epsilon=0}$$
-e
-$$\frac{\partial}{\partial t}\mathbf{u}=\frac{\partial}{\partial \epsilon}\mathbf{V}_\epsilon \big|_{\epsilon=0}$$
-differenziando l'equazione (?.?) si ottiene
-$$\rho_{\mathcal{B}} \frac{\partial}{\partial \epsilon}\mathbf{V}_\epsilon = \Nabla\cdot\widehat{\mathbf{P}}(\mathbf{F_\epsilon)}$$
-che in $\epsilon=0$ vale
-$$\rho_{\mathcal{B}} \frac{\partial^2\mathbf{u}^i}{\partial t^2} = \frac{\partial}{\partial \mathbf{X}^j}(\frac{\partial\widehat{\mathbf{P}}^{ij}}{\partial\mathbf{F}^k_l}(\mathbf{I})\frac{\partial\mathbf{u}^k}{\partial\mathbf{X}^l})$$
-Definiamo il tensore classico di elasticità come
-$$ c_{ijkl}(\mathbf{X})= \frac{\partial\widehat{\mathbf{P}}^{ij}}{\partial\mathbf{F}^k_l}(\mathbf{I})$$.
-Se il materiale è omogeneo allora i valori di $c_{ijkl}$ sono costanti in tutto il corpo e l'equazione dell'elasticità lineare diventa
-$$\rho_{\mathcal{B}} \frac{\partial^2\mathbf{u}^i}{\partial t^2} = \frac{\partial^2\mathbf{u}^k}{\partial\mathbf{X}^j\partial\mathbf{X}^l}$$.
-Se il materiale è omogeneo e isotropico allora esistono due costani $\lambda$ e $\mu$ dette moduli di Lamè per cui
-$$c_{ijkl}=\lambda\delta_{ij}\delta_{kl}+\mu(\delta_{ik}\delta_{jl}+\delta_{il}\delta_{jk})$$.
 
 %
 \paragraph{Materiali iperelastici}
@@ -962,6 +941,32 @@ e
 \end{equation*}
 %
 
+\paragraph{Elasticità lineare}
+Quando il corpo in esame è soggetto solo a piccoli spostamenti e a piccole deformazioni è possibile ottenere una teoria semplificata linearizzando le equazioni non lineari del moto.
+
+Sia $\widehat{\mathbf{P}}$ la funzione costitutiva di un materiale elastico omogeneo non lineare tale che $\widehat{\mathbf{P}}(\mathbf{I})=0$, cioè la configurazione di riferimento ha stress nullo.
+Sia $\phi_\epsilon(\mathbf{X},t)$ una famiglia di moti dipendenti dal parametro $\epsilon \ll1$ tale che $\phi_0(\mathbf{X},t) = \mathbf{X}$. Quindi $\phi_0$ soddisfa le equazioni del moto
+$$\rho_\mathcal{B}\frac{\partial \mathbf{V}}{\partial t} = \Nabla\cdot\widehat{\mathbf{P}}(\mathbf{F}) $$.
+Si supponga che anche $\phi_\epsilon$ soddisfi la stessa equazione per ogni $\epsilon$.
+Sia 
+$$\phi_\epsilon(\mathbf{X},t) = \mathbf{X}+\epsilon\mathbf{u}(\mathbf{X},t) + \mathcal{O}(\epsilon^2)$$
+l'espansione in serie di $\phi_\epsilon$.
+Il problema di riduce a trovare $\mathbf{u}$.
+Osservato che 
+$$\mathbf{u}=\frac{\partial}{\partial \epsilon}\phi_\epsilon \big|_{\epsilon=0}$$
+e
+$$\frac{\partial}{\partial t}\mathbf{u}=\frac{\partial}{\partial \epsilon}\mathbf{V}_\epsilon \big|_{\epsilon=0}$$
+differenziando l'equazione (?.?) si ottiene
+$$\rho_{\mathcal{B}} \frac{\partial}{\partial \epsilon}\mathbf{V}_\epsilon = \Nabla\cdot\widehat{\mathbf{P}}(\mathbf{F_\epsilon)}$$
+che in $\epsilon=0$ vale
+$$\rho_{\mathcal{B}} \frac{\partial^2\mathbf{u}^i}{\partial t^2} = \frac{\partial}{\partial \mathbf{X}^j}(\frac{\partial\widehat{\mathbf{P}}^{ij}}{\partial\mathbf{F}^k_l}(\mathbf{I})\frac{\partial\mathbf{u}^k}{\partial\mathbf{X}^l})$$
+Definiamo il tensore classico di elasticità come
+$$ c_{ijkl}(\mathbf{X})= \frac{\partial\widehat{\mathbf{P}}^{ij}}{\partial\mathbf{F}^k_l}(\mathbf{I})$$.
+Se il materiale è omogeneo allora i valori di $c_{ijkl}$ sono costanti in tutto il corpo e l'equazione dell'elasticità lineare diventa
+$$\rho_{\mathcal{B}} \frac{\partial^2\mathbf{u}^i}{\partial t^2} = \frac{\partial^2\mathbf{u}^k}{\partial\mathbf{X}^j\partial\mathbf{X}^l}$$.
+Se il materiale è omogeneo e isotropico allora esistono due costani $\lambda$ e $\mu$ dette moduli di Lamè per cui
+$$c_{ijkl}=\lambda\delta_{ij}\delta_{kl}+\mu(\delta_{ik}\delta_{jl}+\delta_{il}\delta_{jk})$$.
+
 \paragraph{Un fluido elastico}
 Si consideri un corpo non lineare iperelastico per cui
 $$\widehat{W}(\mathbf{F}) = h(|\mathbf{F}|)$$.
@@ -980,24 +985,16 @@ L'equazione del moto di Cauchy diventa
 $$\rho\frac{D \mathbf{u}}{Dt} = -\Nabla p+\rho\mathbf{b}$$
 che è l'equazione di Eulero per i fluidi perfetti comprimibili, che quindi sono un sottoinsieme dei materiali elastici.
 Nei fluidi viscosi invece $\boldsymbol{\sigma}$ dipende non solo da $\mathbf{F}$ ma anche da $\Nabla\mathbf{v}$.
-[distinguere fluidi da solidi mediante gruppo di simmetria]
+%[distinguere fluidi da solidi mediante gruppo di simmetria]
+
 \paragraph{Incomprimibilità}
-Un materiale è incomprimibile se $J\equiv 1$ o $\Nabla\cdot\mathbf{v}=0$.
-Aggiungendo all'espressione del primo tensore di Piola-Kirkhhoff moltiplicatore di Lagrange associato al vincolo di incomprimibilità si ottiene
+
+Come già visto nel paragrafo riguardante i fluidi la condizione di incomprimibilità può essere espresso come 
 \begin{equation*}
-\mathbf{P}(\mathbf{X},t)=-p\mathbf{F}^{-T}+\widehat{\mathbf{P}}(\mathbf{X},\mathbf{F}(\mathbf{X},t))
+\Nabla\cdot\mathbf{v}=0 %$J\equiv 1$
 \end{equation*}
 
-Per $\widehat{\mathbf{P}}=0$  si ottiene l'equazione di Eulero per i fluidi perfetti incomprimibili
-\begin{align*}
-&\rho\frac{D \mathbf{v}}{Dt} = -\Nabla p+\rho\mathbf{b} \\
-&\Nabla\cdot\mathbf{v}=0
-\end{align*}
-
-%
-\paragraph{Incomprimibilità}
-
-Il vincolo di incomprimibilità nel riferimento lagrangiano si può esprimere come
+Il vincolo di incomprimibilità nel riferimento lagrangiano si può esprimere invece come
 
 \begin{equation*}
 \frac{d}{dt}\int_{\mathcal{P}_t}\,d\mathbf{x} = \int_{\mathcal{P}}\frac{\partial}{\partial t}\vert\mathbb{F}\vert\,d\mathbf{s} = 0
@@ -1012,14 +1009,25 @@ L'aggiunta del vincolo di incomprimibilità rende necessario correggere la funzi
 \begin{equation*}
 W^{\text{inc}}(\mathbb{F}) = W(\mathbb{F})-P(\vert\mathbb{F}\vert - 1)
 \end{equation*}
-dove $P$ è il moltiplicatore di Lagrange associato alla condizione $\mathbb{F}\vert=1$.
+dove $P$ è il moltiplicatore di Lagrange associato alla condizione $\vert\mathbb{F}\vert=1$.
 
 Possiamo così calcolare il primo tensore di Piola-Kirchhoff
 \begin{equation*}
 \mathbb{P}^{\text{inc}}=\frac{\partial W}{\partial t}-\vert\mathbb{F}\vert P\mathbb{F}^{-t}
 \end{equation*}
 
+%Aggiungendo all'espressione del primo tensore di Piola-Kirkhhoff moltiplicatore di Lagrange associato al vincolo di incomprimibilità si ottiene
+%\begin{equation*}
+%\mathbf{P}(\mathbf{X},t)=-p\mathbf{F}^{-T}+\widehat{\mathbf{P}}%(\mathbf{X},\mathbf{F}(\mathbf{X},t))
+%\end{equation*}
+
 $P$ rappresenta l'equivalente della pressione idrostatica $p$ presente in coordinate euleriane nelle equazioni di Navier-Stokes.
+
+Osserviamo che se $\widehat{\mathbf{P}}=0$  si riottiene l'equazione di Eulero per i fluidi perfetti incomprimibili
+\begin{align*}
+&\rho\frac{D \mathbf{v}}{Dt} = -\Nabla p+\rho\mathbf{b} \\
+&\Nabla\cdot\mathbf{v}=0
+\end{align*}
 
 Un esempio di corpo elastico è rappresentato dal modello neo-Hookiano in cui la legge costitutiva è data da
 \begin{equation*}
